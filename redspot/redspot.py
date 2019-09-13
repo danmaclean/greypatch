@@ -1,24 +1,26 @@
-import numpy as np
 from skimage import io
 from skimage import color
-import matplotlib.pyplot as plt
-from scipy import ndimage as ndi
-from skimage.color import label2rgb
 from skimage import measure
-from skimage import feature
+from scipy import ndimage as ndi
+import matplotlib.pyplot as plt
+import numpy as np
 from typing import Callable, List, Tuple, Union
 
-HEALTHY_HUE = (0.156, 1.0)
-HEALTHY_SAT = (0.196, 1.0)
-HEALTHY_VAL = (0.0, 1.0)
+LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
+LEAF_AREA_SAT = tuple([i / 255 for i in (50, 255)])
+LEAF_AREA_VAL = tuple([i / 255 for i in (40, 255)])
+
+HEALTHY_HUE = tuple([i / 255 for i in (40, 255)])
+HEALTHY_SAT = tuple([i / 255 for i in (50, 255)])
+HEALTHY_VAL = tuple([i / 255 for i in (0, 255)])
 
 HEALTHY_RED = (4, 155)
 HEALTHY_GREEN = (120, 175)
 HEALTHY_BLUE = (0, 255)
 
-LESION_HUE = (0, 35)
-LESION_SAT = (0, 255)
-LESION_VAL = (5, 185)
+LESION_HUE = tuple([i / 255 for i in (0, 35)])
+LESION_SAT = tuple([i / 255 for i in (0, 255)])
+LESION_VAL = tuple([i / 255 for i in (5, 185)])
 
 
 def threshold_hsv_img(im: np.ndarray,
@@ -88,14 +90,14 @@ def load_as_hsv(fname: str) -> np.ndarray:
 def preview_mask(m: np.ndarray, width: int = 10, height: int = 5) -> None:
     """given a binary bool mask array returns a plot in two colours black = 1/True, white = 0/False"""
     plt.figure(figsize=(width, height))
-    plt.imshow(m, cmap="binary")
+    plt.imshow(m, cmap="binary_r")
     plt.show()
 
 
 def preview_object_labels(label_array: np.ndarray, binary_image: np.ndarray) -> None:
     """given a labelled array from ndi.label and a background binary image, returns a plot with
     the objects described in the labelled array coloured in. For preview purposes not further analysis """
-    overlay = label2rgb(label_array, image=binary_image)
+    overlay = color.label2rgb(label_array, image=binary_image, bg_label=0)
     plt.imshow(overlay)
     plt.show()
 
@@ -112,6 +114,18 @@ def is_long_and_large(obj: measure._regionprops._RegionProperties, major_to_mino
         else:
             return False
     except ZeroDivisionError:
+        return None
+
+
+def is_not_small(obj: measure._regionprops._RegionProperties, min_area: int = 50 * 50) -> Union[bool,None]:
+    """"given a region props object ; returns True if takes up pixels of min_area,
+     False otherwise and None if not calculable"""
+    try:
+        if obj.area >= min_area:
+            return True
+        else:
+            return False
+    except:
         return None
 
 
@@ -157,11 +171,13 @@ def griffiths_healthy_regions(hsv_img: np.ndarray,
                               s: Tuple[float, float] = HEALTHY_SAT,
                               v: Tuple[float, float] = HEALTHY_VAL) -> Tuple[np.ndarray, int]:
     """given an image in hsv applies Ciaran Griffiths detection for healthy regions.
-    returns the mask of pixels and the pixel volume. Note does not convert to RGB - not clear
+    returns the mask of pixels and the pixel volume. Note does not convert to RGB - not clear 
     at this time whether whether that code actually does anything in Ciaran's script."""
-    # TODO: check with Ciaran whether the RGB change here is actually effective?!
-    mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)  # ,r,g,b)
+    # TO DO: check with Ciaran whether the RGB change here is actually effective?!
+    # rgb_img = hsv_to_rgb255(hsv_img)
+    mask = threshold_hsv_img(hsv_img).astype(int)  # ,r,g,b)
     filled_mask = ndi.binary_fill_holes(mask)
+
     return (filled_mask, np.sum(mask))
 
 
@@ -171,6 +187,25 @@ def griffiths_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tu
     applies a hsv_space colour threshold, then finds edges with Canny and fills that mask for holes.
     returns a labelled mask of objects and the object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
-    edges = feature.canny(mask, sigma=sigma)
-    lesion_mask = ndi.binary_fill_holes(mask).astype(int)
-    return ndi.label(lesion_mask)
+    # edges = feature.canny(mask, sigma=sigma).astype(int)
+    lesion_mask = ndi.binary_fill_holes(mask)
+    return lesion_mask, np.sum(mask)
+
+
+def griffiths_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
+                           v: Tuple[float, float] = LEAF_AREA_VAL) -> Tuple[np.ndarray, int]:
+    """given an image in hsv applies Ciaran Griffiths detection for leaf area regions.
+    applies a hsv_space colour threshold and fills that mask for holes.
+    returns a binary mask object count."""
+    mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
+    return ndi.binary_fill_holes(mask)
+
+
+def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
+    """given an image and a binary mask, clears all pixels in the image (ie sets to zero)
+    the zero/false pixels in the mask"""
+    i = img.copy()
+    a = i[:, :, 0] * mask
+    b = i[:, :, 1] * mask
+    c = i[:, :, 2] * mask
+    return np.dstack([a, b, c])
