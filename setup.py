@@ -18,7 +18,7 @@ setup(
         "scikit-image >= 0.15.0",
         "scipy >= 1.3.1",
         "numpy >= 1.17.1",
-        "matplotlib-base >= 3.1.1",
+        "matplotlib >= 3.1.1",
         "pytest >= 5.1.2"
     ],
 )
