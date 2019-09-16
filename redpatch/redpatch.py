@@ -166,11 +166,11 @@ def extract_image_segment(hsv_img: np.ndarray, region_prop: measure._regionprops
     return hsv_img[min_row:max_row, min_col:max_col]
 
 
-def griffiths_healthy_regions(hsv_img: np.ndarray,
+def griffin_healthy_regions(hsv_img: np.ndarray,
                               h: Tuple[float, float] = HEALTHY_HUE,
                               s: Tuple[float, float] = HEALTHY_SAT,
                               v: Tuple[float, float] = HEALTHY_VAL) -> Tuple[np.ndarray, int]:
-    """given an image in hsv applies Ciaran Griffiths detection for healthy regions.
+    """given an image in hsv applies Ciaran Griffin's detection for healthy regions.
     returns the mask of pixels and the pixel volume. Note does not convert to RGB - not clear 
     at this time whether whether that code actually does anything in Ciaran's script."""
     # TO DO: check with Ciaran whether the RGB change here is actually effective?!
@@ -181,9 +181,9 @@ def griffiths_healthy_regions(hsv_img: np.ndarray,
     return (filled_mask, np.sum(mask))
 
 
-def griffiths_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tuple[float, float] = LESION_SAT,
+def griffin_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tuple[float, float] = LESION_SAT,
                              v: Tuple[float, float] = LESION_VAL, sigma: float = 2.0) -> Tuple[np.ndarray, int]:
-    """given an image in hsv applies Ciaran Griffiths detection for lesion regions.
+    """given an image in hsv applies Ciaran Griffin's detection for lesion regions.
     applies a hsv_space colour threshold, then finds edges with Canny and fills that mask for holes.
     returns a labelled mask of objects and the object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
@@ -192,9 +192,9 @@ def griffiths_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tu
     return lesion_mask, np.sum(mask)
 
 
-def griffiths_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
+def griffin_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
                            v: Tuple[float, float] = LEAF_AREA_VAL) -> Tuple[np.ndarray, int]:
-    """given an image in hsv applies Ciaran Griffiths detection for leaf area regions.
+    """given an image in hsv applies Ciaran Griffin's detection for leaf area regions.
     applies a hsv_space colour threshold and fills that mask for holes.
     returns a binary mask object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
