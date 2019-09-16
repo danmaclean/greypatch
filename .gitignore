@@ -1,8 +1,9 @@
 .idea
 .ipynb_checkpoints
-redspot_notebooks/.ipynb_checkpoints
+redpatch_notebooks/.ipynb_checkpoints
 *.pyc
 /dist/
+/build/*
 /*.egg-info
 /*.egg
 

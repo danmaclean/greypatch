@@ -2,8 +2,8 @@
 
 import subprocess
 import os
-import redspot_notebooks
+import redpatch_notebooks
 
-dir_path = os.path.dirname(os.path.realpath(redspot_notebooks.__file__))
+dir_path = os.path.dirname(os.path.realpath(redpatch_notebooks.__file__))
 
 subprocess.run(["jupyter", "notebook", "--notebook-dir", dir_path])
