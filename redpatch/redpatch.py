@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable, List, Tuple, Union
 from ipywidgets import FloatRangeSlider, FloatProgress
+from IPython import display
 import ipywidgets as widgets
 
 
@@ -225,14 +226,14 @@ def run_threshold_preview(image: np.ndarray) -> None:
         v=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f')
     )
     def interact_plot(h=(0.2, 0.4), s=(0.2, 0.4), v=(0.2, 0.4)):
-        x = rp.threshold_hsv_img(image,
+        x = threshold_hsv_img(image,
                                  h=h,
                                  s=s,
                                  v=v)
 
         f = FloatProgress(min=0, max=100, step=1, description="Progress:")
         display(f)
-        i = spec_image.copy()
+        i = image.copy()
         f.value += 25
 
         i[x] = (0, 1, 1)
