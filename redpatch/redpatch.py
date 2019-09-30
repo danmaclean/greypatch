@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable, List, Tuple, Union
 from ipywidgets import FloatRangeSlider, FloatProgress
+import ipywidgets as widgets
 
 
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
