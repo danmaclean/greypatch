@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.0.1dev12',
+    version='0.0.1dev13',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redspot',
     license='LICENSE.txt',
@@ -12,7 +12,7 @@ setup(
     scripts=['scripts/redpatch-start'],
     include_package_data=True,
     package_data={"redpatch_notebooks": ['Redpatch Basic Use Example.ipynb',
-                                         'leaf_and_square.jpg', 'single_input.jpg'
+                                         'leaf_and_square.jpg', 'single_input.jpg',
                                          'Using Threshold Sliders.ipynb'
                                          ]},
     python_requires='>=3.7',

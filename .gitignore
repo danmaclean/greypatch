@@ -8,3 +8,4 @@ redpatch_notebooks/.ipynb_checkpoints
 /*.egg
 
 push_to_pypi*
+.DS_Store
