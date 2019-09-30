@@ -5,6 +5,8 @@ from scipy import ndimage as ndi
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable, List, Tuple, Union
+from ipywidgets import FloatRangeSlider, FloatProgress
+
 
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
 LEAF_AREA_SAT = tuple([i / 255 for i in (50, 255)])
@@ -117,7 +119,7 @@ def is_long_and_large(obj: measure._regionprops._RegionProperties, major_to_mino
         return None
 
 
-def is_not_small(obj: measure._regionprops._RegionProperties, min_area: int = 50 * 50) -> Union[bool,None]:
+def is_not_small(obj: measure._regionprops._RegionProperties, min_area: int = 50 * 50) -> Union[bool, None]:
     """"given a region props object ; returns True if takes up pixels of min_area,
      False otherwise and None if not calculable"""
     try:
@@ -209,3 +211,37 @@ def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
     b = i[:, :, 1] * mask
     c = i[:, :, 2] * mask
     return np.dstack([a, b, c])
+
+
+def run_threshold_preview(image: np.ndarray) -> None:
+    """ Given an HSV image, generates some sliders and an overlay image. Shows the image colouring the
+    pixels that are included in the sliders thresholds in red. Note this does not return an image or
+     mask of those pixels, its just a tool for finding the thresholds"""
+
+    @widgets.interact_manual(
+        h=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f'),
+        s=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f'),
+        v=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f')
+    )
+    def interact_plot(h=(0.2, 0.4), s=(0.2, 0.4), v=(0.2, 0.4)):
+        x = rp.threshold_hsv_img(image,
+                                 h=h,
+                                 s=s,
+                                 v=v)
+
+        f = FloatProgress(min=0, max=100, step=1, description="Progress:")
+        display(f)
+        i = spec_image.copy()
+        f.value += 25
+
+        i[x] = (0, 1, 1)
+        f.value += 25
+
+        io.imshow(color.hsv2rgb(i))
+        f.value += 25
+        io.show()
+        f.value += 25
+
+        # rp.preview_mask(x)
+        return_string = "Selected Values\nHue: {0}\nSaturation: {1}\nValue: {2}\n".format(h, s, v)
+        print(return_string)

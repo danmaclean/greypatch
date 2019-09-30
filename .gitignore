@@ -7,3 +7,4 @@ redpatch_notebooks/.ipynb_checkpoints
 /*.egg-info
 /*.egg
 
+push_to_pypi*
