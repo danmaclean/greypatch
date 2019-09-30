@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable, List, Tuple, Union
 from ipywidgets import FloatRangeSlider, FloatProgress
-from IPython import display
+from IPython.display import display
 import ipywidgets as widgets
 
 
