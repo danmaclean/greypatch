@@ -151,9 +151,9 @@ def label_image(m: np.ndarray, structure=None, output=None) -> Tuple[np.ndarray,
 
 
 
-def get_object_properties(label_array: np.ndarray, source_image: np.ndarray) -> List[measure._regionprops._RegionProperties]:
+def get_object_properties(label_array: np.ndarray ) -> List[measure._regionprops._RegionProperties]:
     """given a label array returns a list of computed RegionProperties objects."""
-    return measure.regionprops(label_array, coordinates='xy', intensity_image=source_image)
+    return measure.regionprops(label_array, coordinates='xy')
 
 
 def filter_region_property_list(region_props: List[measure._regionprops._RegionProperties],
@@ -250,7 +250,6 @@ def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, 
         plt.figure(figsize=(width,height))
         plt.imshow(color.hsv2rgb(i))
         f.value += 25
-
 
         return_string = "Selected Values\nHue: {0}\nSaturation: {1}\nValue: {2}\n".format(h, s, v)
         print(return_string)
