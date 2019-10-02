@@ -91,17 +91,24 @@ def load_as_hsv(fname: str) -> np.ndarray:
     return hsv_img
 
 
-def preview_mask(m: np.ndarray, width: int = 10, height: int = 5) -> None:
+def preview_mask(m: np.ndarray, width: int = 5, height: int = 5) -> None:
     """given a binary bool mask array returns a plot in two colours black = 1/True, white = 0/False"""
     plt.figure(figsize=(width, height))
     plt.imshow(m, cmap="binary_r")
     plt.show()
 
 
-def preview_object_labels(label_array: np.ndarray, binary_image: np.ndarray) -> None:
+def preview_hsv(img: np.ndarray, width: int = 5, height: int = 5) -> None:
+    """given an HSV image, generates a preview"""
+    plt.figure(figsize=(width, height))
+    plt.imshow(color.hsv2rgb(img))
+    plt.show()
+
+def preview_object_labels(label_array: np.ndarray, binary_image: np.ndarray, width: int = 5, height: int = 5) -> None:
     """given a labelled array from ndi.label and a background binary image, returns a plot with
     the objects described in the labelled array coloured in. For preview purposes not further analysis """
     overlay = color.label2rgb(label_array, image=binary_image, bg_label=0)
+    plt.figure(figsize=(width, height))
     plt.imshow(overlay)
     plt.show()
 
@@ -143,9 +150,10 @@ def label_image(m: np.ndarray, structure=None, output=None) -> Tuple[np.ndarray,
     return label_array, number_of_labels
 
 
-def get_object_properties(label_array: np.ndarray) -> List[measure._regionprops._RegionProperties]:
+
+def get_object_properties(label_array: np.ndarray, source_image: np.ndarray) -> List[measure._regionprops._RegionProperties]:
     """given a label array returns a list of computed RegionProperties objects."""
-    return measure.regionprops(label_array, coordinates='xy')
+    return measure.regionprops(label_array, coordinates='xy', intensity_image=source_image)
 
 
 def filter_region_property_list(region_props: List[measure._regionprops._RegionProperties],
@@ -215,35 +223,41 @@ def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
     return np.dstack([a, b, c])
 
 
-def run_threshold_preview(image: np.ndarray) -> None:
+def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, slider_width: int = 500) -> None:
     """ Given an HSV image, generates some sliders and an overlay image. Shows the image colouring the
     pixels that are included in the sliders thresholds in red. Note this does not return an image or
      mask of those pixels, its just a tool for finding the thresholds"""
 
+    slider_width = str(slider_width) + 'px'
     @widgets.interact_manual(
-        h=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f'),
-        s=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f'),
-        v=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f')
+        h=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width}),
+        s=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width}),
+        v=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width})
     )
     def interact_plot(h=(0.2, 0.4), s=(0.2, 0.4), v=(0.2, 0.4)):
-        x = threshold_hsv_img(image,
-                                 h=h,
-                                 s=s,
-                                 v=v)
-
         f = FloatProgress(min=0, max=100, step=1, description="Progress:")
         display(f)
+
+        x = threshold_hsv_img(image, h=h,s=s,v=v)
+        f.value += 25
+
         i = image.copy()
         f.value += 25
 
         i[x] = (0, 1, 1)
         f.value += 25
 
-        io.imshow(color.hsv2rgb(i))
-        f.value += 25
-        io.show()
+        plt.figure(figsize=(width,height))
+        plt.imshow(color.hsv2rgb(i))
         f.value += 25
 
-        # rp.preview_mask(x)
+
         return_string = "Selected Values\nHue: {0}\nSaturation: {1}\nValue: {2}\n".format(h, s, v)
         print(return_string)
+
+
+def get_region_subimage(region_obj: measure._regionprops._RegionProperties , source_image: np.ndarray) -> np.ndarray:
+    min_row, min_col, max_row, max_col = region_obj.bbox
+    """given a RegionProperties object and a source image, will return the portion of the image
+    coverered by the RegionProperties object"""
+    return source_image[min_row:max_row, min_col:max_col, :]
