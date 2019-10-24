@@ -18,6 +18,7 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         "ipywidgets == 7.5.1",
+        "ipython == 7.8.0",
         "jupyter == 1.0.0",
         "numpy == 1.17.1",
         "matplotlib >= 3.1.0",
