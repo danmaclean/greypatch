@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.0.1dev20',
+    version='0.0.1dev21',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redspot',
     license='LICENSE.txt',

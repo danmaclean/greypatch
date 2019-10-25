@@ -153,7 +153,7 @@ def label_image(m: np.ndarray, structure=None, output=None) -> Tuple[np.ndarray,
 
 def get_object_properties(label_array: np.ndarray ) -> List[measure._regionprops._RegionProperties]:
     """given a label array returns a list of computed RegionProperties objects."""
-    return measure.regionprops(label_array, coordinates='xy')
+    return measure.regionprops(label_array)
 
 
 def filter_region_property_list(region_props: List[measure._regionprops._RegionProperties],
@@ -260,3 +260,11 @@ def get_region_subimage(region_obj: measure._regionprops._RegionProperties , sou
     """given a RegionProperties object and a source image, will return the portion of the image
     coverered by the RegionProperties object"""
     return source_image[min_row:max_row, min_col:max_col, :]
+
+
+def estimate_hsv_from_rgb(r, g, b):
+    arr = skimage.color.rgb2hsv([[[r, g, b]]])
+    h = float(arr[:, :, 0])
+    s = float(arr[:, :, 1])
+    v = float(arr[:, :, 2])
+    return h, s, v
