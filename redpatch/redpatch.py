@@ -151,9 +151,9 @@ def label_image(m: np.ndarray, structure=None, output=None) -> Tuple[np.ndarray,
 
 
 
-def get_object_properties(label_array: np.ndarray ) -> List[measure._regionprops._RegionProperties]:
+def get_object_properties(label_array: np.ndarray, intensity_image: np.ndarray = None, ) -> List[measure._regionprops._RegionProperties]:
     """given a label array returns a list of computed RegionProperties objects."""
-    return measure.regionprops(label_array)
+    return measure.regionprops(label_array, intensity_image=intensity_image)
 
 
 def filter_region_property_list(region_props: List[measure._regionprops._RegionProperties],
@@ -268,3 +268,15 @@ def estimate_hsv_from_rgb(r, g, b):
     s = float(arr[:, :, 1])
     v = float(arr[:, :, 2])
     return h, s, v
+
+# def batch_process(folder: str = ".", settings: str = "settings.yml"):
+
+#     get_files()
+#     for f in files:
+#         leaves = get_leaves(settings: whole_leaf_settings)
+#             for l in leaves:
+#                healthy_portion = get_healthy_portion()
+#                 lesion_regions = get_lesion_regions()
+#                 for lr in lesion_regions():
+#                     lesion_centres = get_lesion_centres()
+
