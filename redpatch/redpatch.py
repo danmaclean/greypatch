@@ -279,4 +279,3 @@ def estimate_hsv_from_rgb(r, g, b):
 #                 lesion_regions = get_lesion_regions()
 #                 for lr in lesion_regions():
 #                     lesion_centres = get_lesion_centres()
-

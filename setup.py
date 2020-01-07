@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.0.1dev21',
+    version='0.0.1.dev22',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redspot',
     license='LICENSE.txt',
@@ -24,6 +24,7 @@ setup(
         "matplotlib >= 3.1.0",
         "pytest == 5.1.2",
         "scikit-image >= 0.16.2",
-        "scipy == 1.3.1"
+        "scipy == 1.3.1",
+        "yaml >=  0.2.2"
     ],
 )

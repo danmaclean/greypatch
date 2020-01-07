@@ -1,7 +1,8 @@
 import yaml
+import redpatch as rp
 
+class FilterSettings(object):
 
-class FilterSettings:
 
     def __init__(self):
         self.settings = {}
@@ -16,7 +17,14 @@ class FilterSettings:
     def read(self, infile):
         with open(infile) as file:
             self.settings = yaml.load(file, Loader=yaml.FullLoader)
-            return (self)
+            return self
+
+    def create_default_filter_file(self, file="default_filter.yml"):
+        #fs = FilterSettings()
+        self.add_setting("leaf_area", h=rp.LEAF_AREA_HUE, s=rp.LEAF_AREA_SAT, v=rp.LEAF_AREA_VAL)
+        self.add_setting("healthy_area", h=rp.HEALTHY_HUE, s=rp.HEALTHY_SAT, v=rp.HEALTHY_VAL)
+        self.add_setting("lesion_area", h=rp.LESION_HUE, s=rp.LESION_SAT, v=rp.LESION_VAL)
+        self.write(file)
 
     def __getitem__(self, item):
         return self.settings[item]
@@ -27,6 +35,5 @@ class FilterSettings:
     # s.write('test.yml')
     # d = s.read('test.yml')
     # print(d.settings)
-
 
 
