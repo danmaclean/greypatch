@@ -1,6 +1,7 @@
 from skimage import io
 from skimage import color
 from skimage import measure
+from skimage import feature
 from scipy import ndimage as ndi
 import matplotlib.pyplot as plt
 import numpy as np
@@ -8,6 +9,7 @@ from typing import Callable, List, Tuple, Union
 from ipywidgets import FloatRangeSlider, FloatProgress
 from IPython.display import display
 import ipywidgets as widgets
+import math
 
 
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
@@ -22,9 +24,17 @@ HEALTHY_RED = (4, 155)
 HEALTHY_GREEN = (120, 175)
 HEALTHY_BLUE = (0, 255)
 
-LESION_HUE = tuple([i / 255 for i in (0, 35)])
-LESION_SAT = tuple([i / 255 for i in (0, 255)])
-LESION_VAL = tuple([i / 255 for i in (5, 185)])
+LESION_HUE = tuple([i / 255 for i in (0, 41)])
+LESION_SAT = tuple([i / 255 for i in (38, 255)])
+LESION_VAL = tuple([i / 255 for i in (111, 255)])
+
+LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
+LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
+LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
+
+SCALE_CARD_HUE = (0.61, 1.0)
+SCALE_CARD_SAT = (0.17, 1.0)
+SCALE_CARD_VAL = (0.25, 0.75)
 
 
 def threshold_hsv_img(im: np.ndarray,
@@ -187,19 +197,18 @@ def griffin_healthy_regions(hsv_img: np.ndarray,
     at this time whether whether that code actually does anything in Ciaran's script."""
     # TO DO: check with Ciaran whether the RGB change here is actually effective?!
     # rgb_img = hsv_to_rgb255(hsv_img)
-    mask = threshold_hsv_img(hsv_img).astype(int)  # ,r,g,b)
+    mask = threshold_hsv_img(hsv_img, h = h, s=s, v=v ).astype(int)  # ,r,g,b)
     filled_mask = ndi.binary_fill_holes(mask)
 
     return (filled_mask, np.sum(mask))
 
 
 def griffin_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tuple[float, float] = LESION_SAT,
-                             v: Tuple[float, float] = LESION_VAL, sigma: float = 2.0) -> Tuple[np.ndarray, int]:
+                             v: Tuple[float, float] = LESION_VAL ) -> Tuple[np.ndarray, int]:
     """given an image in hsv applies Ciaran Griffin's detection for lesion regions.
-    applies a hsv_space colour threshold, then finds edges with Canny and fills that mask for holes.
+    applies a hsv_space colour threshold,
     returns a labelled mask of objects and the object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
-    # edges = feature.canny(mask, sigma=sigma).astype(int)
     lesion_mask = ndi.binary_fill_holes(mask)
     return lesion_mask, np.sum(mask)
 
@@ -208,9 +217,32 @@ def griffin_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tup
                            v: Tuple[float, float] = LEAF_AREA_VAL) -> Tuple[np.ndarray, int]:
     """given an image in hsv applies Ciaran Griffin's detection for leaf area regions.
     applies a hsv_space colour threshold and fills that mask for holes.
-    returns a binary mask object count."""
+    returns a binary mask and object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
     return ndi.binary_fill_holes(mask)
+
+def griffin_lesion_centres(hsv_img, lesion_region: measure._regionprops._RegionProperties, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
+                           v: Tuple[float, float] = LEAF_AREA_VAL, sigma: float = 2.0 ):
+    """finds lesion centres in a given lesion region"""
+    #convert to grey for canny
+    img_grey = color.rgb2gray(color.hsv2rgb(hsv_img))
+    sub_img = get_region_subimage(lesion_region, img_grey)
+    edges = feature.canny(sub_img, sigma=sigma).astype(int)
+    mask = ndi.binary_fill_holes(edges)
+    labelled_image, count = label_image(mask)
+    region_props = get_object_properties(labelled_image, edges)
+    return region_props
+
+def griffin_scale_card(hsv_img, h, s, v, side_length = 5):
+    '''returns pixels per cm of scale card object'''
+    mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
+    card_mask = ndi.binary_fill_holes(mask)
+    labelled_image, count = label_image(card_mask)
+    region_props = get_object_properties(labelled_image, card_mask)
+    biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True )[0].area #assume biggest object is scale card
+    side = math.sqrt(biggest_obj_area)
+    return side / float(side_length)
+
 
 
 def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
@@ -259,8 +291,10 @@ def get_region_subimage(region_obj: measure._regionprops._RegionProperties , sou
     min_row, min_col, max_row, max_col = region_obj.bbox
     """given a RegionProperties object and a source image, will return the portion of the image
     coverered by the RegionProperties object"""
-    return source_image[min_row:max_row, min_col:max_col, :]
-
+    if len(source_image.shape) == 3:
+        return source_image[min_row:max_row, min_col:max_col, :]
+    else:
+        return source_image[min_row:max_row, min_col:max_col ]
 
 def estimate_hsv_from_rgb(r, g, b):
     arr = skimage.color.rgb2hsv([[[r, g, b]]])
@@ -269,13 +303,4 @@ def estimate_hsv_from_rgb(r, g, b):
     v = float(arr[:, :, 2])
     return h, s, v
 
-# def batch_process(folder: str = ".", settings: str = "settings.yml"):
 
-#     get_files()
-#     for f in files:
-#         leaves = get_leaves(settings: whole_leaf_settings)
-#             for l in leaves:
-#                healthy_portion = get_healthy_portion()
-#                 lesion_regions = get_lesion_regions()
-#                 for lr in lesion_regions():
-#                     lesion_centres = get_lesion_centres()
