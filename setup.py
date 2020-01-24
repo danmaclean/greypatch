@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.0.1.dev28',
+    version='0.0.1.dev29',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redspot',
     license='LICENSE.txt',
@@ -28,6 +28,7 @@ setup(
         "scipy == 1.3.1",
         "pyyaml >=  5.2",
         "shapely >= 1.6.0",
-        "pandas >= 0.25.0"
+        "pandas >= 0.25.0",
+        "yattag >= 1.12.2"
     ],
 )
