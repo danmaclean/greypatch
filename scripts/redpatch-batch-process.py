@@ -11,16 +11,16 @@ See the help:
 Usage Examples:
 
     Basic use:
-        redpatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process.py --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Tidy full output:
-        redpatch-batch-process --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process.py --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a scale card:
-        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process.py --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Create a default filter settings YAML file:
-        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+        redpatch-batch-process.py --create_default_filter ~/Desktop/default_filter.yml
 """
 
 
