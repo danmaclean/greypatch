@@ -140,7 +140,7 @@ def threshold_hsv_img(im: np.ndarray,
     return _threshold_three_channels(im, c1_limits=h, c2_limits=s, c3_limits=v)
 
 
-def hsv_to_rgb255(img: np.ndarry) -> np.ndarray:
+def hsv_to_rgb255(img: np.ndarray) -> np.ndarray:
     """
     Convert HSV image to RGB image.
 
