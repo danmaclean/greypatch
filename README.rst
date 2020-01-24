@@ -4,6 +4,12 @@ redpatch
 
 A package to find disease lesions in plant leaf images
 
+Installation
+============
+
+``pip install redpatch``
+
+
 
 Running in Interactive Mode
 ===========================
