@@ -1,3 +1,6 @@
+.. image:: https://zenodo.org/badge/205859428.svg
+   :target: https://zenodo.org/badge/latestdoi/205859428
+
 ====
 redpatch
 ====
