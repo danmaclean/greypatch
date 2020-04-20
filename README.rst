@@ -7,6 +7,15 @@ redpatch
 
 A package to find disease lesions in plant leaf images
 
+
+Prerequisites
+============
+
+Relies on Shapely.
+
+``conda config –add channels conda-forge``
+``conda install shapely``
+
 Installation
 ============
 
@@ -48,13 +57,20 @@ The basic call for the basic case is:
 
 The script will run and output will be produced in the destination folder. The same call works whether the folder contains one or many images and if the images contain one or many leaves,
 
-
 Analysing a folder with images with a scale card
 -------------------------------------------------
 
 If all the images contain a scale card, and the _same_ scale card, then you can get information about area added to the output. Use the ``--scaled_card_side_length`` option to give the size of the scale card in centimetres.
 
 ``redpatch-batch-process.py --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+
+
+Analysing a folder with images with a known scale in pixels per centimetre
+--------------------------------------------------------------------------
+
+If you already know the scale length in pixels per centimetre you can pass that as a value
+
+``redpatch-batch-process.py --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 Including a full results table

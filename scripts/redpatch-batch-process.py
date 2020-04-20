@@ -1,4 +1,6 @@
+#!/usr/bin/env python
 """
+
 redpatch-batch-process
 
 A utility for running redpatch functions on a folder of images.
@@ -18,6 +20,9 @@ Usage Examples:
 
     Use a scale card:
         redpatch-batch-process.py --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Use a known pixel per cm value
+        redpatch-batch-process.py --pixels_per_cm 472 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Create a default filter settings YAML file:
         redpatch-batch-process.py --create_default_filter ~/Desktop/default_filter.yml
@@ -57,6 +62,9 @@ Usage Examples:
     Use a scale card:
         redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
+    Use a known scale
+        redpatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~
+
     Create a default filter settings YAML file:
         redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
 """)
@@ -67,7 +75,7 @@ parser.add_argument("-t", "--create_tidy_output", help="produce an additional fu
 parser.add_argument("-f", "--filter_settings", help="file of filter settings to use.", default="default_filter.yml",type=str )
 parser.add_argument("-c", "--create_default_filter", help="creates a default filter file of name provided in CREATE_DEFAULT_FILTER and exits", default=False, type=str)
 parser.add_argument("-l", "--scale_card_side_length", help="find a scale card in each image and calculate pixels per centimetre", default=False)
-
+parser.add_argument("-p", "--pixels_per_cm", help="use a previously known value for pixels per centimetre", default=False)
 args = parser.parse_args()
 
 if args.create_default_filter:
@@ -88,6 +96,10 @@ if not os.path.exists(args.destination_folder):
 if not os.path.exists(args.filter_settings):
     parser.print_help(sys.stderr)
     sys.exit("filter settings file {} does not exist".format(args.filter_settings))
+
+if args.scale_card_side_length and args.pixels_per_cm:
+    parser.print_help(sys.stderr)
+    sys.exit("scale card side length AND pixels per cm supplied. Can only work with one.")
 
 class RegionPropPlus(object ):
 
@@ -282,14 +294,27 @@ def batch_process(folder=".", settings="settings.yml"):
 
             if args.scale_card_side_length:
                 df['pixels_per_cm'] = [scale] * len(df)
+            elif args.pixels_per_cm:
+                df['pixels_per_cm'] = [int(args.pixels_per_cm)] * len(df)
             all_dfs.append(df)
 
+
     df = pd.concat(all_dfs)
-    summary_df = (df
-                  .drop(['label'], axis=1)
-                  .groupby(['image_file', 'sub_image_index', 'area_type', 'pixels_per_cm'])
-                  .sum()
-                  )
+    summary_df = None
+    if args.scale_card_side_length or args.pixels_per_cm:
+        summary_df = (df
+                      .drop(['label'], axis=1)
+                      .groupby(['image_file', 'sub_image_index', 'area_type', 'pixels_per_cm'])
+                      .sum()
+                    )
+    else:
+        summary_df = (df
+                      .drop(['label', 'pixels_per_cm' ], axis=1)
+                      .groupby(['image_file', 'sub_image_index', 'area_type'])
+                      .sum()
+                      )
+
+
     report.summary = summary_df
     report.write(os.path.join(args.destination_folder))
     _write_out(os.path.join(args.destination_folder, "summary_results.csv"), summary_df, index=True)
