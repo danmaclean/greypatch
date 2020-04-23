@@ -22,6 +22,7 @@ setup(
         "ipython == 7.8.0",
         "jupyter == 1.0.0",
         "numpy == 1.17.1",
+        "numba >= 0.49.0",
         "matplotlib >= 3.1.0",
         "pytest == 5.1.2",
         "scikit-image >= 0.16.2",

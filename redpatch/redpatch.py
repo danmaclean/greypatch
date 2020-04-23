@@ -82,7 +82,9 @@ from skimage import io
 from skimage import color
 from skimage import measure
 from skimage import feature
+from skimage import transform
 from scipy import ndimage as ndi
+from scipy import misc
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Callable, List, Tuple, Union
@@ -90,6 +92,7 @@ from ipywidgets import FloatRangeSlider, FloatProgress
 from IPython.display import display
 import ipywidgets as widgets
 import math
+from numba import njit
 
 #: Default values for h,s,v values in different griffin named functions
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
@@ -174,7 +177,7 @@ def threshold_rgb_img(im: np.ndarray,
     assert im.dtype.type is np.int64, "im must be np.ndarray of type int in scale (0,255). Looks like you're not using a RGB image in range (0,255)."
     return _threshold_three_channels(im, c1_limits=r, c2_limits=g, c3_limits=b)
 
-
+@njit
 def _threshold_three_channels(im: np.ndarray,
                               c1_limits: Tuple[Union[int, float], Union[int, float]] = (0, 1),
                               c2_limits: Tuple[Union[int, float], Union[int, float]] = (0, 1),
@@ -194,24 +197,20 @@ def _threshold_three_channels(im: np.ndarray,
     :param: c3_limits Tuple -- a 2-tuple of channel 3 thresholds (lower, upper)
     :return: np.ndarray -- a logical array (dtype bool_) with shape == im
     """
-    c1 = im[:, :, 0]
-    c2 = im[:, :, 1]
-    c3 = im[:, :, 2]
-
     c1_min, c1_max = c1_limits
     c2_min, c2_max = c2_limits
     c3_min, c3_max = c3_limits
 
-    c1_mask = np.logical_and(
-        c1 >= c1_min, c1 <= c1_max
-    )
-    c2_mask = np.logical_and(
-        c2 >= c2_min, c2 <= c2_max
-    )
-    c3_mask = np.logical_and(
-        c3 >= c3_min, c3 <= c3_max
-    )
-    return np.logical_and(c1_mask, c2_mask, c3_mask)
+    result = np.zeros_like(im[:, :, 0])
+    x_d, y_d, _ = im.shape
+    for x in range(x_d):
+        for y in range(y_d):
+            c1_pass = (im[x, y, 0] >= c1_min and im[x, y, 0] <= c1_max)
+            c2_pass = (im[x, y, 1] >= c2_min and im[x, y, 1] <= c2_max)
+            c3_pass = (im[x, y, 2] >= c3_min and im[x, y, 2] <= c3_max)
+            if c1_pass and c2_pass and c3_pass:
+                result[x, y] = 1
+    return result.astype(np.bool_)
 
 
 def load_as_hsv(fname: str) -> np.ndarray:
@@ -487,11 +486,56 @@ def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
     return np.dstack([a, b, c])
 
 
-def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, slider_width: int = 500) -> None:
+def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, slider_width: int = 500, perfect: bool=False, scale: float = 0.25) -> None:
     """ Given an HSV image, generates some sliders and an overlay image. Shows the image colouring the
     pixels that are included in the sliders thresholds in red. Note this does not return an image or
-     mask of those pixels, its just a tool for finding the thresholds"""
+     mask of those pixels, its just a tool for finding the thresholds
 
+     If `perfect = False` (default) the image is downsized by a factor in `scale` (default = 0.25) before running the thresholding.
+
+     """
+
+    if perfect:
+        _perfect_threshold_preview(image, height=height, width=width, slider_width=slider_width)
+    else:
+        _fast_threshold_preview(image, height=height, width=width, slider_width=slider_width, scale=scale)
+
+
+def _fast_threshold_preview(image: np.ndarray, height: int = 15,  width: int = 15, slider_width: int = 500, scale: float = 0.25):
+    slider_width = str(slider_width) + 'px'
+
+
+    @widgets.interact(
+        h=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width}, continuous_update = False),
+        s=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width}, continuous_update = False),
+        v=FloatRangeSlider(min=0., max=1., step=0.01, readout_format='.2f', layout={'width': slider_width}, continuous_update = False)
+    )
+
+    def interact_plot( h=(0.2, 0.4), s=(0.2, 0.4), v=(0.2, 0.4)):
+        out_shape = list(image.shape)
+        out_shape[0] = int(out_shape[0] * scale)
+        out_shape[1] = int(out_shape[1] * scale)
+        i = transform.resize(image, tuple(out_shape))
+
+        thresh = threshold_hsv_img(i, h=h, s=s, v=v)
+
+        @njit
+        def _do_(i, thresh):
+            x_d,y_d,_ = i.shape
+            for x in range(x_d):
+                for y in range(y_d):
+                    if thresh[x,y]:
+                        i[x,y] = (0, 1, 1)
+            return i
+        i = _do_(i,thresh)
+
+        plt.figure(figsize=(width, height))
+        plt.imshow(color.hsv2rgb(i))
+
+        return_string = "Selected Values\nHue: {0}\nSaturation: {1}\nValue: {2}\n".format(h, s, v)
+        print(return_string)
+
+def _perfect_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15,  slider_width: int = 500):
     slider_width = str(slider_width) + 'px'
 
     @widgets.interact_manual(
@@ -518,7 +562,6 @@ def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, 
 
         return_string = "Selected Values\nHue: {0}\nSaturation: {1}\nValue: {2}\n".format(h, s, v)
         print(return_string)
-
 
 def get_region_subimage(region_obj: measure._regionprops._RegionProperties, source_image: np.ndarray) -> np.ndarray:
     min_row, min_col, max_row, max_col = region_obj.bbox
