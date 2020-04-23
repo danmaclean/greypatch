@@ -148,6 +148,15 @@ def _get_sub_images(imfile, fs):
     cleared_leaf_sub_images = [rp.clear_background(sub_images[i], sub_labels[i]) for i in range(len(sub_labels))]
     return cleared_leaf_sub_images
 
+def _get_leaf_areas(im, fs):
+    leaf_area_mask = rp.griffin_leaf_regions(im,
+                                             h=fs['leaf_area']['h'],
+                                             s=fs['leaf_area']['s'],
+                                             v=fs['leaf_area']['v'])
+    labelled_leaf_area, leaf_areas_found = rp.label_image(leaf_area_mask)
+    leaf_area_properties = rp.get_object_properties(labelled_leaf_area)
+    return leaf_area_properties
+
 
 def _get_healthy_areas(im, fs):
     healthy_mask, healthy_volume = rp.griffin_healthy_regions(im,
@@ -235,7 +244,7 @@ def _calc_size(img):
 
 def _annotate_sub_img(img, healthy, lesions, centres, file=None):
     size = _calc_size(img)
-    plt.figure(figsize=size)
+    fig = plt.figure(figsize=size)
     img = skimage.img_as_ubyte(color.hsv2rgb(img))
     plt.imshow(img)
     hcol = (127/255, 191/255, 63/255, 0.5 )
@@ -259,6 +268,7 @@ def _annotate_sub_img(img, healthy, lesions, centres, file=None):
     c_patch = mpatches.Patch(color=ccol, label="Centres")
     plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure,handles=[h_patch,l_patch,c_patch],loc="upper right")
     plt.savefig(file, dpi = 72, )
+    plt.close(fig)
 
 def batch_process(folder=".", settings="settings.yml"):
     fs = rp.FilterSettings()
@@ -282,6 +292,7 @@ def batch_process(folder=".", settings="settings.yml"):
             healthy_obj_props = _get_healthy_areas(sub_i, fs)
             lesion_area_props = _get_lesion_areas(sub_i, fs)  # 0 to many per image
             lesion_centre_props = _get_lesion_centres(sub_i, fs, lesion_area_props,)
+            leaf_area_props = _get_leaf_areas(sub_i, fs)
 
             imtag = os.path.join(args.destination_folder, "{}_sub_image_{}{}".format(os.path.basename(imfile), sub_i_idx, "_annotated.jpg"))
             _annotate_sub_img(sub_i, healthy_obj_props, lesion_area_props, lesion_centre_props,  file=imtag)
@@ -290,7 +301,8 @@ def batch_process(folder=".", settings="settings.yml"):
             hdf = _make_pandas(healthy_obj_props, area_type="healthy_region", image_file=imfile, sub_image_index=sub_i_idx)
             ldf = _make_pandas(lesion_area_props, area_type="lesion_region", image_file=imfile, sub_image_index=sub_i_idx)
             lcdf = _make_pandas(lesion_centre_props, area_type="lesion_centre", image_file=imfile, sub_image_index=sub_i_idx)
-            df = hdf.append([ldf,lcdf], ignore_index=True)
+            ladf = _make_pandas(leaf_area_props, area_type="leaf_area", image_file=imfile, sub_image_index=sub_i_idx)
+            df = hdf.append([ldf,lcdf,ladf], ignore_index=True)
 
             if args.scale_card_side_length:
                 df['pixels_per_cm'] = [scale] * len(df)
@@ -307,6 +319,7 @@ def batch_process(folder=".", settings="settings.yml"):
                       .groupby(['image_file', 'sub_image_index', 'area_type', 'pixels_per_cm'])
                       .sum()
                     )
+
     else:
         summary_df = (df
                       .drop(['label', 'pixels_per_cm' ], axis=1)
@@ -314,6 +327,12 @@ def batch_process(folder=".", settings="settings.yml"):
                       .sum()
                       )
 
+    tail_df = (df
+               .drop(['label', 'pixels_per_cm'], axis=1)
+               .groupby(['image_file', 'sub_image_index', 'area_type'])
+               .size()
+               )
+    summary_df['count'] = tail_df
 
     report.summary = summary_df
     report.write(os.path.join(args.destination_folder))
