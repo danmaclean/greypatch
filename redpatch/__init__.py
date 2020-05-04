@@ -1,4 +1,4 @@
 from .redpatch import *
-from .fillebrowser import *
+from .filebrowser import *
 from .filtersettings import *
 from .report import *

@@ -111,9 +111,9 @@ LESION_HUE = tuple([i / 255 for i in (0, 41)])
 LESION_SAT = tuple([i / 255 for i in (38, 255)])
 LESION_VAL = tuple([i / 255 for i in (111, 255)])
 
-LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
-LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
-LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
+#LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
+#LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
+#LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
 
 SCALE_CARD_HUE = (0.61, 1.0)
 SCALE_CARD_SAT = (0.17, 1.0)
@@ -154,28 +154,6 @@ def hsv_to_rgb255(img: np.ndarray) -> np.ndarray:
 
     """
     return (color.hsv2rgb(img) * 255).astype('int')
-
-
-def threshold_rgb_img(im: np.ndarray,
-                      r: Tuple[int, int] = HEALTHY_RED,
-                      g: Tuple[int, int] = HEALTHY_GREEN,
-                      b: Tuple[int, int] = HEALTHY_BLUE) -> np.ndarray:
-    """
-    Selects pixels passing an RGB image threshold in all three channels.
-
-    Returns a logical binary mask array (dtype bool_ of dimension im ( an RGB image) in which pixels in im pass the lower
-    and upper thresholds specified in r, g and b (red lower,upper; green lower,upper and blue lower, upper;
-    respectively)
-
-    :param: im np.ndarray -- a numpy ndarray
-    :param: r Tuple -- a 2-tuple of Red thresholds (lower, upper)
-    :param: g Tuple -- a 2-tuple of Green thresholds (lower, upper)
-    :param: b Tuple -- a 2-tuple of Blue thresholds (lower, upper)
-    :return: np.ndarray -- a logical array (dtype bool_) with shape == im
-
-    """
-    assert im.dtype.type is np.int64, "im must be np.ndarray of type int in scale (0,255). Looks like you're not using a RGB image in range (0,255)."
-    return _threshold_three_channels(im, c1_limits=r, c2_limits=g, c3_limits=b)
 
 @njit
 def _threshold_three_channels(im: np.ndarray,
@@ -218,14 +196,17 @@ def load_as_hsv(fname: str) -> np.ndarray:
     Load a file into HSV colour space.
 
     Takes a file path and opens the image then converts to HSV colour space.
-    returns numpy array dtype float 64
+    returns numpy array dtype float 64. Strips the alpha (fourth) channel if it exists.
+    Input must be colour image. One channel images will be rejected.
 
     :param: fname str -- path to the image
     :return: np.ndarray -- numpy array containing image
 
     """
     img = io.imread(fname)
-    assert len(img.shape) == 3, "Image at: {} does not appear to be a colour image.".format(fname)
+    if img.shape[-1] == 4:
+        img = img[:,:,:3]
+    assert len(img.shape) == 3, "Image at: {} does not appear to be a 3 channel colour image.".format(fname)
     hsv_img = color.rgb2hsv(img)
     return hsv_img
 
@@ -424,7 +405,6 @@ def griffin_healthy_regions(hsv_img: np.ndarray,
 
 
     """
-    # rgb_img = hsv_to_rgb255(hsv_img)
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)  # ,r,g,b)
     filled_mask = ndi.binary_fill_holes(mask)
 
@@ -450,9 +430,7 @@ def griffin_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tup
     return ndi.binary_fill_holes(mask)
 
 
-def griffin_lesion_centres(hsv_img, lesion_region: measure._regionprops._RegionProperties,
-                           h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
-                           v: Tuple[float, float] = LEAF_AREA_VAL, sigma: float = 2.0):
+def griffin_lesion_centres(hsv_img, lesion_region: measure._regionprops._RegionProperties, sigma: float = 2.0):
     """finds lesion centres in a given lesion region"""
     # convert to grey for canny
     img_grey = color.rgb2gray(color.hsv2rgb(hsv_img))
@@ -566,16 +544,9 @@ def _perfect_threshold_preview(image: np.ndarray, height: int = 15, width: int =
 def get_region_subimage(region_obj: measure._regionprops._RegionProperties, source_image: np.ndarray) -> np.ndarray:
     min_row, min_col, max_row, max_col = region_obj.bbox
     """given a RegionProperties object and a source image, will return the portion of the image
-    coverered by the RegionProperties object"""
+    covered by the RegionProperties object"""
     if len(source_image.shape) == 3:
         return source_image[min_row:max_row, min_col:max_col, :]
     else:
         return source_image[min_row:max_row, min_col:max_col]
 
-
-def estimate_hsv_from_rgb(r, g, b):
-    arr = skimage.color.rgb2hsv([[[r, g, b]]])
-    h = float(arr[:, :, 0])
-    s = float(arr[:, :, 1])
-    v = float(arr[:, :, 2])
-    return h, s, v

@@ -13,19 +13,19 @@ See the help:
 Usage Examples:
 
     Basic use:
-        redpatch-batch-process.py --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Tidy full output:
-        redpatch-batch-process.py --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a scale card:
-        redpatch-batch-process.py --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a known pixel per cm value
-        redpatch-batch-process.py --pixels_per_cm 472 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        redpatch-batch-process --pixels_per_cm 472 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Create a default filter settings YAML file:
-        redpatch-batch-process.py --create_default_filter ~/Desktop/default_filter.yml
+        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
 """
 
 
@@ -116,7 +116,7 @@ class RegionPropPlus(object ):
         return [x + y for x, y in zip(parent_rprop.bbox, self.bbox)]
 
     def correct_coords(self, parent_rprop):
-        p = np.asarray(self.coords) #todo ##correct coords
+        p = np.asarray(self.coords)
         min_row, min_col, max_row, max_col = parent_rprop.bbox
         return np.add(p, [min_row, min_col])
 
@@ -179,15 +179,11 @@ def _get_lesion_areas(im, fs):
 
 
 def _get_lesion_centres(im, fs,  lesion_area_region_prop_list ):
-    #needs to be fixed  to properly adjust the coordinates of the region properties
-    #im = whole leaf sub image
 
     mod_lesion_centres = []
     for lesion_area in lesion_area_region_prop_list:
         if lesion_area.area > 10:
-            lesion_centres = rp.griffin_lesion_centres(im, lesion_area, h=fs['lesion_centre']['h'],
-                                      s=fs['lesion_centre']['s'],
-                                   v=fs['lesion_centre']['v'])
+            lesion_centres = rp.griffin_lesion_centres(im, lesion_area)
             for lc in lesion_centres:
                 mod_lc = RegionPropPlus(lc, lesion_area)
                 mod_lesion_centres.append(mod_lc)
@@ -228,7 +224,7 @@ def _make_polygons_for_image( list_of_rprops ):
         else:
             coords = rprop.coords
         if len(coords) > 2: #need 3 points for a polygon
-            p = np.asarray(coords) # TODO change if lesion centre - for offset acc to new  bounding box
+            p = np.asarray(coords)
             p.T[[0,1]] = p.T[[1,0]]
             p = Polygon(p)
             x, y = p.exterior.xy
@@ -347,3 +343,5 @@ def batch_process(folder=".", settings="settings.yml"):
 
 if __name__ == '__main__':
     batch_process(folder=args.source_folder, settings=args.filter_settings)
+
+

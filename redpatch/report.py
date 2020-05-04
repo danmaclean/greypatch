@@ -1,3 +1,53 @@
+"""
+
+report
+
+A module for creating redpatch run reports; used by 'redpatch-batch-process'
+
+
+Workflow Overview
+-----------------
+
+1. Create object, specify run folder, image objects and filter settings
+2. Add calculated annotated sub images for images
+3. write to html
+
+
+Basic Usage
+-----------
+
+1. Import module and create object
+
+    .. highlight:: python
+    .. code-block:: python
+
+    import redpatch as rp
+    fs = rp.FilterSettings()
+    fs.read("settings.yml")
+    source_folder = "some/folder"
+    image_files = ["img1.jpg", "img2.jpg]
+    report = rp.RPReport(source_folder, image_files, fs)
+
+
+2. Add subimages and annotations
+
+    .. highlight:: python
+    .. code-block:: python
+
+    report.add_subimages(image_file, sub_image_tag)
+    report.add_annotated_subimages(image_file, sub_image_tag)
+
+
+3. Write report and images to results folder
+
+    .. highlight:: python
+    .. code-block:: python
+
+    report.write("some/folder")
+
+"""
+
+
 import os
 from yattag import Doc
 import datetime

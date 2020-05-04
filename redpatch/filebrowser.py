@@ -1,15 +1,51 @@
+"""
+
+FileBrowser
+
+A module for creating interactive file browser widgets in a Jupyter notebook
+
+
+Workflow Overview
+-----------------
+
+1. Create object
+2. Browse file interactively
+3. Extract path of selected file
+
+
+Basic Usage
+-----------
+
+1. Import module and create widget
+
+    .. highlight:: python
+    .. code-block:: python
+
+    import redpatch as rp
+    f = rp.FileBrowser()
+    f.widget()
+
+2. Browse
+
+    ... interactively
+
+3. Extract path of selected file
+
+    .. highlight:: python
+    .. code-block:: python
+
+    f.path
+
+"""
+
+
 import os
 import ipywidgets as widgets
 from pathlib import Path
 
 
 class FileBrowser(object):
-    """ Implements an ipywidgets file chooser.
-    >>> f = FileBrowser()
-    >>> f.widget() # activate the widget
-    >>> ...
-    >>> f.path # get the selected file...
-    """
+
 
     def __init__(self):
         self.path = str(Path.home())

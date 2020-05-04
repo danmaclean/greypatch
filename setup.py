@@ -9,7 +9,7 @@ setup(
     author='Dan MacLean',
     author_email='dan.maclean@tsl.ac.uk',
     description='Finding Disease Lesions in Plant Leaves',
-    scripts=['scripts/redpatch-start', 'scripts/redpatch-batch-process.py'],
+    scripts=['scripts/redpatch-start', 'scripts/redpatch-batch-process'],
     include_package_data=True,
     package_data={"redpatch_notebooks": ['Redpatch Basic Use Example.ipynb',
                                          'leaf_and_square.jpg', 'single_input.jpg',
