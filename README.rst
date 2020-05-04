@@ -1,6 +1,9 @@
 .. image:: https://zenodo.org/badge/205859428.svg
    :target: https://zenodo.org/badge/latestdoi/205859428
 
+.. image:: https://travis-ci.org/TeamMacLean/redpatch.svg?branch=master
+    :target: https://travis-ci.org/TeamMacLean/redpatch
+
 ====
 redpatch
 ====
