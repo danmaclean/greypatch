@@ -5,11 +5,12 @@
     :target: https://travis-ci.org/TeamMacLean/redpatch
 
 .. image:: https://readthedocs.org/projects/redpatch/badge/?version=latest
-:target: https://redpatch.readthedocs.io/en/latest/?badge=latest
-:alt: Documentation Status
+    :target: https://redpatch.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://codecov.io/gh/TeamMacLean/redpatch/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/TeamMacLean/redpatch
+    :target: https://codecov.io/gh/TeamMacLean/redpatch
+
 ====
 redpatch
 ====
