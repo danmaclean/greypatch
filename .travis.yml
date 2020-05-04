@@ -19,12 +19,9 @@ before_install:
   - conda info -a
 
     # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION dep1 dep2 ...
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pip pytest shapely
   - conda activate test-environment
   - python --version
-  - conda install pip
-  - codna install pytest
-  - conda install shapely
 # command to install dependencies
 install:
   - pip install .
