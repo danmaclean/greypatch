@@ -44,7 +44,7 @@ Creating the filter settings file
 
 A default filter settings file can be generated as follows:
 
-``redpatch-batch-process.py --create_default_filter ~/Desktop/default_filter.yml``
+``redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml``
 
 The settings will be written to the specified file.
 
@@ -54,7 +54,7 @@ Analysing a folder with images with no scale card
 
 The basic call for the basic case is:
 
-``redpatch-batch-process.py ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``redpatch-batch-process ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 The script will run and output will be produced in the destination folder. The same call works whether the folder contains one or many images and if the images contain one or many leaves,
 
@@ -63,7 +63,7 @@ Analysing a folder with images with a scale card
 
 If all the images contain a scale card, and the _same_ scale card, then you can get information about area added to the output. Use the ``--scaled_card_side_length`` option to give the size of the scale card in centimetres.
 
-``redpatch-batch-process.py --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 Analysing a folder with images with a known scale in pixels per centimetre
@@ -71,7 +71,7 @@ Analysing a folder with images with a known scale in pixels per centimetre
 
 If you already know the scale length in pixels per centimetre you can pass that as a value
 
-``redpatch-batch-process.py --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``redpatch-batch-process --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 Including a full results table
@@ -79,7 +79,7 @@ Including a full results table
 
 By default the script produces a summary results table. You will usually want a full account of every object found. A tidy format table of these results can be produced during the run with the ``--create_tidy_output`` option.
 
-``redpatch-batch-process.py --create_tidy_output --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``redpatch-batch-process --create_tidy_output --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 

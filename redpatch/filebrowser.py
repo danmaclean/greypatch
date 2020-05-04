@@ -21,9 +21,9 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    import redpatch as rp
-    f = rp.FileBrowser()
-    f.widget()
+        import redpatch as rp
+        f = rp.FileBrowser()
+        f.widget()
 
 2. Browse
 
@@ -34,7 +34,7 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    f.path
+        f.path
 
 """
 

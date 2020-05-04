@@ -25,29 +25,29 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    import redpatch as rp
+        import redpatch as rp
 
 2. Create an IPython file browser to select images
 
     .. highlight:: python
     .. code-block:: python
 
-    f = rp.FileBrowser()
-    f.widget()
+        f = rp.FileBrowser()
+        f.widget()
 
 3. Load an image into HSV colour space
 
     .. highlight:: python
     .. code-block:: python
 
-    hsv_image = rp.load_as_hsv( f.path )
+        hsv_image = rp.load_as_hsv( f.path )
 
 4. Create an image slider
 
     .. highlight:: python
     .. code-block:: python
 
-    rp.run_threshold_preview(hsv_image, width = 2)
+        rp.run_threshold_preview(hsv_image, width = 2)
 
 
 5. Find objects using HSV values
@@ -55,27 +55,27 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    # find raw objects
-    lesion_region_mask, lesion_region_volume = rp.griffin_lesion_regions(cleared_image, h =(0.0, 0.82),
+        # find raw objects
+        lesion_region_mask, lesion_region_volume = rp.griffin_lesion_regions(cleared_image, h =(0.0, 0.82),
                                                                                         s = (0.2, 1.0),
                                                                                         v = (0.4, 1.0))
-    # label regions
-    labelled_lesion_regions, lesion_region_count = rp.label_image(lesion_region_mask)
+        # label regions
+        labelled_lesion_regions, lesion_region_count = rp.label_image(lesion_region_mask)
 
-    # visual preview of regions
-    rp.preview_object_labels(labelled_lesion_regions, color.hsv2rgb(cleared_image))
+        # visual preview of regions
+        rp.preview_object_labels(labelled_lesion_regions, color.hsv2rgb(cleared_image))
 
-    #filter regions
-    lesion_regions_properties_list = rp.get_object_properties(labelled_lesion_regions)
-    lesion_regions_to_keep = rp.filter_region_property_list(lesion_regions_properties_list, rp.is_not_small
+        #filter regions
+        lesion_regions_properties_list = rp.get_object_properties(labelled_lesion_regions)
+        lesion_regions_to_keep = rp.filter_region_property_list(lesion_regions_properties_list, rp.is_not_small
 
 6. Examine objects as scikit-image measure RegionProps objects
 
     .. highlight:: python
     .. code-block:: python
 
-    first_lesion_region = lesion_regions_to_keep[0]
-    first_lesion_region.area
+        first_lesion_region = lesion_regions_to_keep[0]
+        first_lesion_region.area
 """
 
 from skimage import io
@@ -94,29 +94,43 @@ import ipywidgets as widgets
 import math
 from numba import njit
 
-#: Default values for h,s,v values in different griffin named functions
+#: Default values for griffin named functions
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
+#: Default values for griffin named functions
 LEAF_AREA_SAT = tuple([i / 255 for i in (50, 255)])
+#: Default values for griffin named functions
 LEAF_AREA_VAL = tuple([i / 255 for i in (40, 255)])
 
+#: Default values for griffin named functions
 HEALTHY_HUE = tuple([i / 255 for i in (40, 255)])
+#: Default values for griffin named functions
 HEALTHY_SAT = tuple([i / 255 for i in (50, 255)])
+#: Default values for griffin named functions
 HEALTHY_VAL = tuple([i / 255 for i in (0, 255)])
 
+#: Default values for griffin named functions
 HEALTHY_RED = (4, 155)
+#: Default values for griffin named functions
 HEALTHY_GREEN = (120, 175)
+#: Default values for griffin named functions
 HEALTHY_BLUE = (0, 255)
 
+#: Default values for griffin named functions
 LESION_HUE = tuple([i / 255 for i in (0, 41)])
+#: Default values for griffin named functions
 LESION_SAT = tuple([i / 255 for i in (38, 255)])
+#: Default values for griffin named functions
 LESION_VAL = tuple([i / 255 for i in (111, 255)])
 
 #LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
 #LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
 #LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
 
+#: Default values for griffin named functions
 SCALE_CARD_HUE = (0.61, 1.0)
+#: Default values for griffin named functions
 SCALE_CARD_SAT = (0.17, 1.0)
+#: Default values for griffin named functions
 SCALE_CARD_VAL = (0.25, 0.75)
 
 
@@ -127,7 +141,7 @@ def threshold_hsv_img(im: np.ndarray,
     """
     Selects pixels passing an HSV image threshold in all three channels.
 
-    Returns a logical binary mask array (dtype bool_ of dimension im ( an HSV image) in which pixels in im pass the lower
+    Returns a logical binary mask array (dtype bool of dimension im ( an HSV image) in which pixels in im pass the lower
     and upper thresholds specified in h, s and v (hue lower,upper; sat lower,upper and val lower, upper;
     respectively)
 
@@ -135,7 +149,7 @@ def threshold_hsv_img(im: np.ndarray,
     :param: h Tuple -- a 2-tuple of Hue thresholds (lower, upper)
     :param: s Tuple -- a 2-tuple of Saturation thresholds (lower, upper)
     :param: v Tuple -- a 2-tuple of Value thresholds (lower, upper)
-    :return: np.ndarray -- a logical array (dtype bool_) with shape == im
+    :return: np.ndarray -- a logical array (dtype bool) with shape == im
 
 
     """
@@ -467,11 +481,11 @@ def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
 def run_threshold_preview(image: np.ndarray, height: int = 15, width: int = 15, slider_width: int = 500, perfect: bool=False, scale: float = 0.25) -> None:
     """ Given an HSV image, generates some sliders and an overlay image. Shows the image colouring the
     pixels that are included in the sliders thresholds in red. Note this does not return an image or
-     mask of those pixels, its just a tool for finding the thresholds
+    mask of those pixels, its just a tool for finding the thresholds
 
-     If `perfect = False` (default) the image is downsized by a factor in `scale` (default = 0.25) before running the thresholding.
+    If `perfect = False` (default) the image is downsized by a factor in `scale` (default = 0.25) before running the thresholding.
 
-     """
+    """
 
     if perfect:
         _perfect_threshold_preview(image, height=height, width=width, slider_width=slider_width)

@@ -19,45 +19,45 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    import redpatch as rp
-    fs = rp.FileSettings()
+        import redpatch as rp
+        fs = rp.FilterSettings()
 
 2. Add some settings
 
     .. highlight:: python
     .. code-block:: python
 
-    fs.add_setting("leaf_area", h=(0.1, 1.0), s=(0.3, 0.6), v=(0.4, 0.6) )
+        fs.add_setting("leaf_area", h=(0.1, 1.0), s=(0.3, 0.6), v=(0.4, 0.6) )
 
 3. Access a setting by name
 
     .. highlight:: python
     .. code-block:: python
 
-    fs.settings["leaf_area"]["h"]
+        fs.settings["leaf_area"]["h"]
 
 3. Write settings to a file
 
     .. highlight:: python
     .. code-block:: python
 
-    fs.write("my_settings.yaml")
+        fs.write("my_settings.yaml")
 
 4. Read in settings from a file
 
     .. highlight:: python
     .. code-block:: python
 
-    fs = rp.FileSettings()
-    settings = fs.read("/some/file/settings.yaml")
+        fs = rp.FilterSettings()
+        settings = fs.read("/some/file/settings.yaml")
 
 5. Create a default filter settings file
 
     .. highlight:: python
     .. code-block:: python
 
-    fs = rp.FileSettings()
-    fs.create_default_filter_file("/some/folder/settings.yaml")
+        fs = rp.FilterSettings()
+        fs.create_default_filter_file("/some/folder/settings.yaml")
 
 
 
@@ -68,7 +68,9 @@ from typing import Tuple
 import redpatch as rp
 
 class FilterSettings(object):
-
+    """
+    class representing groups of filter settings for different aspects of the image
+    """
 
     def __init__(self):
         self.settings = {}

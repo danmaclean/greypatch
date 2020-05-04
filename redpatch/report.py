@@ -21,12 +21,12 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    import redpatch as rp
-    fs = rp.FilterSettings()
-    fs.read("settings.yml")
-    source_folder = "some/folder"
-    image_files = ["img1.jpg", "img2.jpg]
-    report = rp.RPReport(source_folder, image_files, fs)
+        import redpatch as rp
+        fs = rp.FilterSettings()
+        fs.read("settings.yml")
+        source_folder = "some/folder"
+        image_files = ["img1.jpg", "img2.jpg]
+        report = rp.RPReport(source_folder, image_files, fs)
 
 
 2. Add subimages and annotations
@@ -34,8 +34,8 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    report.add_subimages(image_file, sub_image_tag)
-    report.add_annotated_subimages(image_file, sub_image_tag)
+        report.add_subimages(image_file, sub_image_tag)
+        report.add_annotated_subimages(image_file, sub_image_tag)
 
 
 3. Write report and images to results folder
@@ -43,7 +43,7 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-    report.write("some/folder")
+        report.write("some/folder")
 
 """
 
@@ -53,7 +53,9 @@ from yattag import Doc
 import datetime
 
 class RPReport(object):
-
+    """
+    Class representing an HTML report page. Used by batch-process
+    """
 
     def __init__(self, source_directory, images, filter_settings):
         self.source_directory = source_directory
