@@ -43,7 +43,7 @@ Examination of single images can be done in interactive mode. Walkthrough exampl
 Running in Batch Mode
 =====================
 
-Batch processing is done on a folder of images. The script ``batch-process.py`` is used to run the process. It needs three pieces of information to run.
+Batch processing is done on a folder of images. The script ``batch-process.`` is used to run the process. It needs three pieces of information to run.
 
 1. A source folder - the folder to read images from,  must contain images and nothing else
 2. A destination folder - the folder the script will write results to. If it doesn't exist at run time it will be created. Existing folders may have their contents overwritten

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.0.1.dev32',
+    version='0.1.0',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redpatch',
     license='LICENSE.txt',
@@ -22,7 +22,7 @@ setup(
         "ipython == 7.8.0",
         "jupyter == 1.0.0",
         "numpy == 1.17.1",
-        "numba >= 0.49.0",
+        "numba == 0.48.0",
         "matplotlib >= 3.1.0",
         "pytest == 5.1.2",
         "scikit-image >= 0.16.2",
