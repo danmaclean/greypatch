@@ -4,6 +4,11 @@
 .. image:: https://travis-ci.org/TeamMacLean/redpatch.svg?branch=master
     :target: https://travis-ci.org/TeamMacLean/redpatch
 
+.. image:: https://readthedocs.org/projects/redpatch/badge/?version=latest
+:target: https://redpatch.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
+
 ====
 redpatch
 ====
