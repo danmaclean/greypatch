@@ -1,5 +1,5 @@
-.. image:: https://zenodo.org/badge/205859428.svg
-   :target: https://zenodo.org/badge/latestdoi/205859428
+.. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3965768.svg
+   :target: https://doi.org/10.5281/zenodo.3965768
 
 .. image:: https://travis-ci.org/TeamMacLean/redpatch.svg?branch=master
     :target: https://travis-ci.org/TeamMacLean/redpatch
