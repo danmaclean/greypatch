@@ -23,7 +23,7 @@ Prerequisites
 
 Relies on Shapely.
 
-``conda config –add channels conda-forge``
+``conda config --add channels conda-forge``
 
 ``conda install shapely``
 
