@@ -462,10 +462,11 @@ def griffin_scale_card(hsv_img, h, s, v, side_length=5):
     card_mask = ndi.binary_fill_holes(mask)
     labelled_image, count = label_image(card_mask)
     region_props = get_object_properties(labelled_image, card_mask)
-    biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True)[
-        0].area  # assume biggest object is scale card
-    side = math.sqrt(biggest_obj_area)
-    return side / float(side_length)
+    if len(region_props > 0):
+        biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True)[0].area  # assume biggest object is scale card
+        side = math.sqrt(biggest_obj_area)
+        return side / float(side_length)
+    return math.nan
 
 
 def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
