@@ -466,7 +466,7 @@ def griffin_scale_card(hsv_img, h, s, v, side_length=5):
         biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True)[0].area  # assume biggest object is scale card
         side = math.sqrt(biggest_obj_area)
         return side / float(side_length)
-    return math.nan
+    return 0.0
 
 
 def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
