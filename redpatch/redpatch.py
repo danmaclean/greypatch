@@ -122,9 +122,10 @@ LESION_SAT = tuple([i / 255 for i in (38, 255)])
 #: Default values for griffin named functions
 LESION_VAL = tuple([i / 255 for i in (111, 255)])
 
-#LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
-#LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
-#LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
+#presumed value, needs updating
+LESION_CENTRE_HUE = tuple([i / 255 for i in (0, 41)])
+LESION_CENTRE_SAT = tuple([i / 255 for i in (38, 255)])
+LESION_CENTRE_VAL = tuple([i / 255 for i in (111, 255)])
 
 #: Default values for griffin named functions
 SCALE_CARD_HUE = (0.61, 1.0)
