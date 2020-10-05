@@ -1,0 +1,392 @@
+#!/usr/bin/env python
+
+# TODO only tidy output
+# TODO scale card and pixels per side x
+# TODO lesion centres in the lesion area x
+# TODO lesion roundness
+# TODO lesion size
+# TODO hole filling
+# TODO lesions within x of margin
+# TODO webtool output
+# TODO fix missing scale card issue x
+# TODO scale card per image, not single scale card at beginning
+
+"""
+
+redpatch-batch-process-advanced
+
+A utility for running redpatch functions on a folder of images with some better settings.
+
+
+See the help:
+
+    redpatch --help
+
+Usage Examples:
+
+    Basic use:
+        redpatch-batch-process-advanced --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Tidy full output:
+        redpatch-batch-process-advanced --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Use a scale card:
+        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Use a known pixel per cm value
+        redpatch-batch-process --pixels_per_cm 472 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Create a default filter settings YAML file:
+        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+"""
+import math
+
+import redpatch as rp
+import numpy as np
+from skimage import measure, io, color
+import skimage
+import os
+import sys
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from shapely.geometry.polygon import Polygon
+
+import argparse
+parser = argparse.ArgumentParser(add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description = """
+redpatch-batch-process
+
+A utility for running redpatch functions on a folder of images.
+
+
+See the help:
+
+    redpatch --help
+
+Usage Examples:
+
+    Basic use:
+        redpatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Tidy full output:
+        redpatch-batch-process --create_tidy_output --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Use a scale card:
+        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+
+    Use a known scale
+        redpatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~
+
+    Create a default filter settings YAML file:
+        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+        
+    Set up for webtool use --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id
+""")
+
+parser.add_argument("-s","--source_folder", help='folder containing images to analyse', type = str)
+parser.add_argument("-d","--destination_folder", help='folder to write output. Created if does not exist. ')
+parser.add_argument("-t", "--create_tidy_output", help="produce an additional full tidy output.", action='store_true')
+parser.add_argument("-f", "--filter_settings", help="file of filter settings to use.", default="default_filter.yml",type=str )
+parser.add_argument("-c", "--create_default_filter", help="creates a default filter file of name provided in CREATE_DEFAULT_FILTER and exits", default=False, type=str)
+parser.add_argument("-l", "--scale_card_side_length", help="find a scale card in each image and calculate pixels per centimetre", default=False)
+parser.add_argument("-p", "--pixels_per_cm", help="use a previously known value for pixels per centimetre", default=False, type=float)
+parser.add_argument("-w", "--use_on_server", help="use the tool on the redpatch webserver. Overrides some other options", default=False)
+parser.add_argument("-i", "--scale_in_cm", help="the scale is measured in cm", default=False, type=bool)
+parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=bool)
+parser.add_argument("-b", "--min_lesion_pixels", help="the minimum pixel volume a lesion can have to be retained", default=False, type=bool)
+parser.add_argument("-j", "--max_lc_ratio", help="maximum length to width ratio a lesion centre can be", default=False, type = float)
+parser.add_argument("-k", "--min_lc_size", help="minimum size a lesion centre can be. Units must correspond to --scale_in_cm", default=False, type=float)
+parser.add_argument("-m", "--lc_prop_across_parent", help="maximal proportion of leaf width lesion centre must be within to be included", default=False, type = float)
+args = parser.parse_args()
+
+if args.create_default_filter:
+    fs = rp.FilterSettings()
+    fs.create_default_filter_file(args.create_default_filter)
+    sys.exit("Written default filter file to {}".format(args.create_default_filter))
+elif not args.source_folder or not args.destination_folder:
+    parser.print_help(sys.stderr)
+    sys.exit('source and destination folder must be provided')
+
+if not os.path.exists(args.source_folder):
+    parser.print_help(sys.stderr)
+    sys.exit("source folder {} does not exist".format(args.source_folder))
+
+if not os.path.exists(args.destination_folder):
+    os.mkdir(args.destination_folder)
+
+if not os.path.exists(args.filter_settings):
+    parser.print_help(sys.stderr)
+    sys.exit("filter settings file {} does not exist".format(args.filter_settings))
+
+if args.scale_card_side_length and args.pixels_per_cm:
+    parser.print_help(sys.stderr)
+    sys.exit("scale card side length AND pixels per cm supplied. Can only work with one.")
+
+if args.min_lesion_area and args.min_lesion_pixels:
+    parser.print_help(sys.stderr)
+    sys.exit("lesion area (cm2) and pixel volume supplied. Can only work with one.")
+
+
+
+def _convert_area_cm_to_area_pixels(m, s):
+    #radius of minimal circular lesion centre in cm
+    r = math.sqrt(m/math.pi)
+    #pixels in the radius of the minimal circular lesion centre
+    p_r = r * s
+    #area of minimal lesion in pixels
+    return math.pi * p_r * p_r
+
+def get_object_properties(label_array: np.ndarray, intensity_image: np.ndarray = None):
+    """given a label array returns a list of computed RegionProperties objects."""
+    return measure.regionprops(label_array, intensity_image=intensity_image)
+
+
+def _get_sub_images(imfile, fs):
+    im = rp.load_as_hsv(imfile)
+    leaf_area_mask = rp.griffin_leaf_regions(im,
+                                             h=fs['leaf_area']['h'],
+                                             s=fs['leaf_area']['s'],
+                                             v=fs['leaf_area']['v'])
+    labelled_leaf_area, _ = rp.label_image(leaf_area_mask)
+    leaf_area_properties = rp.get_object_properties(labelled_leaf_area)
+    leaf_areas_to_keep = rp.filter_region_property_list(leaf_area_properties, rp.is_not_small)
+    cleaned_leaf_area = rp.clean_labelled_mask(labelled_leaf_area, leaf_areas_to_keep)
+    final_labelled_leaf_area, _ = rp.label_image(cleaned_leaf_area)
+    three_d_final_labelled_leaf_area = np.dstack((final_labelled_leaf_area, final_labelled_leaf_area,
+                                                  final_labelled_leaf_area))  # stupid hack because get object properties needs 3d label array to match image
+    props = get_object_properties(three_d_final_labelled_leaf_area, intensity_image=im)
+    sub_labels = [p.image.astype(int)[:, :, -1] for p in props]
+    sub_images = [p.intensity_image for p in props]
+    cleared_leaf_sub_images = [rp.clear_background(sub_images[i], sub_labels[i]) for i in range(len(sub_labels))]
+    return cleared_leaf_sub_images
+
+def _get_leaf_areas(im, fs):
+    leaf_area_mask = rp.griffin_leaf_regions(im,
+                                             h=fs['leaf_area']['h'],
+                                             s=fs['leaf_area']['s'],
+                                             v=fs['leaf_area']['v'])
+    labelled_leaf_area, _ = rp.label_image(leaf_area_mask)
+    leaf_area_properties = rp.get_object_properties(labelled_leaf_area)
+    return leaf_area_properties
+
+
+def _get_healthy_areas(im, fs):
+    healthy_mask, _ = rp.griffin_healthy_regions(im,
+                                                              h=fs['healthy_area']['h'],
+                                                              s=fs['healthy_area']['s'],
+                                                              v=fs['healthy_area']['v'])
+    labelled_healthy_area, _ = rp.label_image(healthy_mask)
+    labelled_healthy_area_properties = rp.get_object_properties(labelled_healthy_area)
+    return labelled_healthy_area_properties
+
+
+def _get_lesion_areas(im, fs):
+    lesion_area_mask, _ = rp.griffin_lesion_regions(im,
+                                                                       h=fs['lesion_area']['h'],
+                                                                       s=fs['lesion_area']['s'],
+                                                                       v=fs['lesion_area']['v'])
+    labelled_lesion_area, _ = rp.label_image(lesion_area_mask)
+    labelled_lesion_area_properties = rp.get_object_properties(labelled_lesion_area)
+    return labelled_lesion_area_properties
+
+
+def _get_lesion_centres(im, fs,  lesion_area_region_prop_list, minimum_lesion_area, leaf_area_prop, scale, scale_in_cm, max_ratio, minimum_size, prop_across_parent):
+
+    annotated_lesion_centre_props = []
+    for lesion_area in lesion_area_region_prop_list:
+        if lesion_area.area >= minimum_lesion_area:
+            raw_lesion_centre_props = rp.griffin_lesion_centres(im, lesion_area)
+            for r in raw_lesion_centre_props:
+                annotated_lesion_centre_props.append( rp.LesionCentre(rprop = r, parent_rprop = lesion_area, scale = scale, scale_in_cm = scale_in_cm, max_ratio = max_ratio, minimum_size = minimum_size, prop_across_parent = prop_across_parent) )
+    return annotated_lesion_centre_props
+
+
+def _get_scale_card(imfile, fs, side_length):
+    im = rp.load_as_hsv(imfile)
+    return rp.griffin_scale_card(im, h=fs['scale_card']['h'],
+                                             s=fs['scale_card']['s'],
+                                             v=fs['scale_card']['v'],
+                                       side_length=side_length
+                                       )
+
+def _make_pandas(region_prop, area_type=None, image_file=None, sub_image_index = None, props=['area','label']):
+    d = {p: [rp[p] for rp in region_prop] for p in props}
+    d['area_type'] = [area_type for i in region_prop]
+    d['image_file'] = [image_file for i in region_prop]
+    d['sub_image_index'] = [sub_image_index for i in region_prop]
+    if area_type == 'lesion_centre':
+        d['parent_lesion_region'] = [lc.parent_label for lc in region_prop]
+        d['prop_across_parent'] = [lc.prop_across_parent for lc in region_prop]
+        d['size'] = [lc.size for lc in region_prop]
+        d['passed'] = [lc.passed for lc in region_prop]
+        d['long_axis_to_short_axis_ratio'] = [lc.long_axis_to_short_axis_ratio for lc in region_prop]
+        #d['centroid'] = [','.join(map(str, lc.centroid)) for lc in region_prop]
+        d['subimage_centre'] = [','.join(map(str, lc.corrected_centroid)) for lc in region_prop]
+       # d['bbox'] = [','.join(map(str,lc.bbox)) for lc in region_prop]
+        #d['corrected_bbox'] = [','.join(map(str,lc.corrected_bbox)) for lc in region_prop]
+
+    else:
+        d['parent_lesion_region'] = ["NA" for i in region_prop]
+        d['prop_across_parent'] = ["NA" for i in region_prop]
+        d['size'] = ["NA" for i in region_prop]
+        d['passed'] = ["NA" for i in region_prop]
+        d['long_axis_to_short_axis_ratio'] = ["NA" for i in region_prop]
+        #d['centroid'] = ["NA" for i in region_prop]
+        d['subimage_centre'] = ["NA" for i in region_prop]
+       # d['bbox'] = ["NA" for i in region_prop]
+        #d['corrected_bbox'] = ["NA" for i in region_prop]
+
+    return pd.DataFrame(d)
+
+def _write_out(file, df, index=False):
+    with open(file, "w") as out:
+        out.write(df.to_csv(index=index))
+
+def _make_polygons_for_image( list_of_rprops ):
+    polys = []
+    for _, rprop in enumerate(list_of_rprops, 1):
+        coords = []
+        if isinstance(rprop, rp.LesionCentre):
+            coords = rprop.corrected_coords
+        else:
+            coords = rprop.coords
+        if len(coords) > 2: #need 3 points for a polygon
+            p = np.asarray(coords)
+            p.T[[0,1]] = p.T[[1,0]]
+            p = Polygon(p)
+            x, y = p.exterior.xy
+            polys.append([x,y])
+    return polys
+
+def _calc_size(img):
+    h,w, _ = img.shape
+    dpi = 72
+    inches_w = w / dpi
+    inches_h = h / dpi
+    return tuple([inches_w, inches_h])
+
+def _annotate_sub_img(img, healthy, lesions, centres, file=None):
+    size = _calc_size(img)
+    fig = plt.figure(figsize=size)
+    img = skimage.img_as_ubyte(color.hsv2rgb(img))
+    plt.imshow(img)
+    hcol = (127/255, 191/255, 63/255, 0.5 )
+    lcol = (243/255, 80/255, 21/255, 0.5 )
+    ccol = (248/255, 252/255, 17/255, 0.66)
+    healthy_polys = _make_polygons_for_image(healthy)
+    lesion_polys = _make_polygons_for_image(lesions)
+    centre_polys = _make_polygons_for_image(centres)
+
+    for p in healthy_polys:
+        plt.plot(p[0], p[1], color=hcol )
+
+    for p in lesion_polys:
+        plt.plot(p[0], p[1], color=lcol )
+
+    for p in centre_polys:
+        plt.plot(p[0], p[1], color=ccol)
+
+    ax = plt.gca()
+    for c in centres:
+        ax.annotate(str(c.label), xy=tuple(reversed(c.corrected_centroid)), xycoords='data', color="white")
+
+    h_patch = mpatches.Patch(color=hcol, label='Healthy')
+    l_patch = mpatches.Patch(color=lcol, label="Lesion")
+    c_patch = mpatches.Patch(color=ccol, label="Centres")
+    plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure,handles=[h_patch,l_patch,c_patch],loc="upper right")
+    plt.savefig(file, dpi = 72, )
+    plt.close(fig)
+
+def batch_process(folder=".", settings="settings.yml"):
+    fs = rp.FilterSettings()
+    fs.read(settings)
+
+    if args.scale_card_side_length and not "scale_card" in fs:
+            raise ValueError("scale card side length provided but no scale card image options present in FilterSettings")
+
+    image_files = [os.path.join(folder, f) for f in os.listdir(folder)]
+    report = rp.RPReport(folder, image_files, fs)
+    all_dfs = []
+    for imfile in image_files:
+        if not args.use_on_server:
+            print("...doing image {}".format(imfile), file=sys.stderr)
+        
+        SCALE = False #must be per image
+        if args.scale_card_side_length:
+            SCALE = _get_scale_card(imfile, fs, side_length=args.scale_card_side_length)
+            if not SCALE:
+                raise ValueError("No scale card pixel value returned; likely scale card not found in image.")
+        elif args.pixels_per_cm:
+            SCALE = args.pixels_per_cm
+
+        MIN_LESION_CENTRE_SIZE = args.min_lc_size
+ 
+        sub_ims = _get_sub_images(imfile, fs)
+        for sub_i_idx, sub_i in enumerate(sub_ims, 1):
+            imtag = os.path.join(args.destination_folder, "{}_sub_image_{}{}".format(os.path.basename(imfile), sub_i_idx, ".jpg") )
+            io.imsave(imtag, skimage.img_as_ubyte(color.hsv2rgb(sub_i)) )
+            report.add_subimages(imfile, imtag)
+
+            healthy_obj_props = _get_healthy_areas(sub_i, fs)
+            leaf_area_props = _get_leaf_areas(sub_i, fs)
+            
+
+            lesion_area_props = _get_lesion_areas(sub_i, fs)  # 0 to many per image
+            lesion_centre_props = _get_lesion_centres(sub_i, fs, lesion_area_props, args.min_lesion_area, leaf_area_props[0], SCALE,  args.scale_in_cm, args.max_lc_ratio, MIN_LESION_CENTRE_SIZE, args.lc_prop_across_parent )
+
+
+            imtag = os.path.join(args.destination_folder, "{}_sub_image_{}{}".format(os.path.basename(imfile), sub_i_idx, "_annotated.jpg"))
+            _annotate_sub_img(sub_i, healthy_obj_props, lesion_area_props, lesion_centre_props,  file=imtag)
+            report.add_annotated_subimages(imfile, imtag)
+
+            hdf = _make_pandas(healthy_obj_props, area_type="healthy_region", image_file=imfile, sub_image_index=sub_i_idx)
+            ldf = _make_pandas(lesion_area_props, area_type="lesion_region", image_file=imfile, sub_image_index=sub_i_idx)
+            lcdf = _make_pandas(lesion_centre_props, area_type="lesion_centre", image_file=imfile, sub_image_index=sub_i_idx)
+            ladf = _make_pandas(leaf_area_props, area_type="leaf_area", image_file=imfile, sub_image_index=sub_i_idx)
+            df = hdf.append([ldf,lcdf,ladf], ignore_index=True)
+
+            if SCALE:
+                df['pixels_per_cm'] = [SCALE] * len(df)
+            elif args.pixels_per_cm:
+                df['pixels_per_cm'] = [int(args.pixels_per_cm)] * len(df)
+            all_dfs.append(df)
+
+
+    df = pd.concat(all_dfs,sort = True)
+    summary_df = None
+    if args.pixels_per_cm:
+        summary_df = (df
+                      .drop(['label'], axis=1)
+                      .groupby(['image_file', 'sub_image_index', 'area_type', 'pixels_per_cm'])
+                      .sum()
+                    )
+
+    else:
+        summary_df = (df
+                      .drop(['label', 'pixels_per_cm' ], axis=1)
+                      .groupby(['image_file', 'sub_image_index', 'area_type'])
+                      .sum()
+                      )
+
+    tail_df = (df
+               .drop(['label', 'pixels_per_cm'], axis=1)
+               .groupby(['image_file', 'sub_image_index', 'area_type'])
+               .size()
+               )
+    summary_df['count'] = tail_df
+
+    report.summary = summary_df
+    report.write(os.path.join(args.destination_folder))
+    _write_out(os.path.join(args.destination_folder, "summary_results.csv"), summary_df, index=True)
+
+    if args.create_tidy_output:
+        _write_out(os.path.join(args.destination_folder, "tidy_results.csv"),df, index = False)
+
+
+
+
+
+if __name__ == '__main__':
+    batch_process(folder=args.source_folder, settings=args.filter_settings)
+
+

@@ -126,6 +126,9 @@ class FilterSettings(object):
     def __getitem__(self, item):
         return self.settings[item]
 
+    def __contains__(self, key):
+        return key in self.settings
+
 
 
 

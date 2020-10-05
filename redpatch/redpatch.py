@@ -135,6 +135,22 @@ SCALE_CARD_SAT = (0.17, 1.0)
 SCALE_CARD_VAL = (0.25, 0.75)
 
 
+
+def circular_area_to_pixel_volume(area: int, scale: float) -> int:
+    """helps work out the pixel volume of a circular object at a given scale
+    area = area in cm2, scale = pixels per cm in this image, obtainiable from rp.griffin_scale_card()
+
+    returns an int giving the number of pixels a circle of area would take up in this
+    image
+    """
+    #radius of eqivalrent circular area in pixels
+    p_r = math.sqrt(area/math.pi)
+    #real radius of the circular area
+    r_r = p_r / scale
+    #volume of area in pixels
+    return math.pi * r_r * r_r
+
+
 def threshold_hsv_img(im: np.ndarray,
                       h: Tuple[float, float] = HEALTHY_HUE,
                       s: Tuple[float, float] = HEALTHY_SAT,
@@ -452,7 +468,7 @@ def griffin_lesion_centres(hsv_img, lesion_region: measure._regionprops._RegionP
     sub_img = get_region_subimage(lesion_region, img_grey)
     edges = feature.canny(sub_img, sigma=sigma).astype(int)
     mask = ndi.binary_fill_holes(edges)
-    labelled_image, count = label_image(mask)
+    labelled_image, _ = label_image(mask)
     region_props = get_object_properties(labelled_image, edges)
     return region_props
 
@@ -461,13 +477,15 @@ def griffin_scale_card(hsv_img, h, s, v, side_length=5):
     '''returns pixels per cm of scale card object'''
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
     card_mask = ndi.binary_fill_holes(mask)
-    labelled_image, count = label_image(card_mask)
+    labelled_image, _ = label_image(card_mask)
     region_props = get_object_properties(labelled_image, card_mask)
+    plt.imshow(card_mask)
+    plt.savefig("mask.jpg")
     if len(region_props) > 0:
         biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True)[0].area  # assume biggest object is scale card
         side = math.sqrt(biggest_obj_area)
         return side / float(side_length)
-    return 0.0
+    return None
 
 
 def clear_background(img: np.ndarray, mask: np.ndarray) -> np.ndarray:
