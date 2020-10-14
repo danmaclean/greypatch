@@ -71,10 +71,14 @@ The script will run and output will be produced in the destination folder. The s
 Analysing a folder with images with a scale card
 -------------------------------------------------
 
-If all the images contain a scale card, and the _same_ scale card, then you can get information about area added to the output. Use the ``--scaled_card_side_length`` option to give the size of the scale card in centimetres.
+If all the images contain a scale card, and the _same_ scale card, then you can get information about area added to the output. Use the ``--scale_card_side_length`` option to give the size of the scale card in centimetres.
 
 ``redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
+Set the filter values for lesion centre objects
+-----------------------------------------------
+
+``redpatch-batch-process --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml --scale_card_side_length --min_lesion_area 2 --max_lc_ratio 2 --min_lc_size 1 --lc_prop_across_parent 0.1
 
 Analysing a folder with images with a known scale in pixels per centimetre
 --------------------------------------------------------------------------
@@ -83,13 +87,6 @@ If you already know the scale length in pixels per centimetre you can pass that 
 
 ``redpatch-batch-process --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
-
-Including a full results table
-------------------------------
-
-By default the script produces a summary results table. You will usually want a full account of every object found. A tidy format table of these results can be produced during the run with the ``--create_tidy_output`` option.
-
-``redpatch-batch-process --create_tidy_output --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 
