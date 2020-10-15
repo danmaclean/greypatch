@@ -44,7 +44,7 @@ def sample_parent_region(sample_parent_image):
 
 @pytest.fixture
 def lc(sample_lesion_region, sample_parent_region):
-    return rp.LesionCentre(rprop = sample_lesion_region, parent_rprop=sample_parent_region, scale=1, max_ratio=1.5, minimum_size=4,prop_across_parent=40)
+    return rp.LesionCentre(rprop = sample_lesion_region, parent_rprop=sample_parent_region, scale=1, pixel_length=1, max_ratio=1.5, minimum_size=4,prop_across_parent=40)
 
 def test_lesion_centre(lc):
     assert lc.major_axis_length == 6
