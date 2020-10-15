@@ -438,6 +438,14 @@ Input must be colour image. One channel images will be rejected.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="redpatch.pixel_volume_to_circular_area">
+<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">pixel_volume_to_circular_area</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pixels</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#redpatch.pixel_volume_to_circular_area" title="Permalink to this definition">¶</a></dt>
+<dd><p>helps work out the area of a circular object with a similar pixel volume at the same scale
+pixels = pixels in the object , scale = pixels per cm in this image, obtainable from rp.griffin_scale_card()</p>
+<p>returns a float giving the area a circle of that number of pixels would take up</p>
+</dd></dl>
+
+<dl class="py function">
 <dt id="redpatch.preview_hsv">
 <code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">preview_hsv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#redpatch.preview_hsv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an HSV image to screen.</p>
@@ -744,6 +752,153 @@ respectively)</p>
 </dd></dl>
 
 </div>
+<span class="target" id="module-lesioncentre"></span><dl class="py class">
+<dt id="lesioncentre.LesionCentre">
+<em class="property">class </em><code class="sig-prename descclassname">lesioncentre.</code><code class="sig-name descname">LesionCentre</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rprop</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parent_rprop</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pixel_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_ratio</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minimum_size</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">prop_across_parent</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lesioncentre.LesionCentre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a lesion centre.</p>
+<p>Modifies a scikit RegionProp and requires information from a
+parent RegionProp</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>rprop skimage.measure._regionprops._RegionProperties -- region to make a lesion centre</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>parent_rprop skimage.measure._regionprops._RegionProperties -- parent (enclosing) region of rprop</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>scale float -- measure of the scale of the image, either None (scale in image pixels) or real units from scale card</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>pixel_length -- length of side of one pixel, available when scale</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>max_ratio float -- threshold of region length / width to pass filter</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>minimum_size float -- minimum size to pass filter. calculated in units of scale</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>prop_across_parent float -- proportion of width of enclosing object the lesion centre must be to pass filter. EG 0.1 indicates that the lesion centre must be greater than 10 percent of the current width across the parent object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-subimage"></span><dl class="py class">
+<dt id="subimage.SubImage">
+<em class="property">class </em><code class="sig-prename descclassname">subimage.</code><code class="sig-name descname">SubImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sub_i</span></em>, <em class="sig-param"><span class="n">sub_i_idx</span></em>, <em class="sig-param"><span class="n">parent_image_file</span></em>, <em class="sig-param"><span class="n">file_settings</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dest_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_lesion_area</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pixel_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_lc_ratio</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_lc_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lc_prop_across_parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subimage.SubImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>class representing sub-image (leaf containing area) of a larger image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sub_i</strong> -- the subimage</p></li>
+<li><p><strong>sub_i_idx</strong> -- the index of the subimage from the subimage list</p></li>
+<li><p><strong>scale</strong> -- the scale of the image if computed</p></li>
+<li><p><strong>pixel_length</strong> -- the length of a pixel side in real units</p></li>
+<li><p><strong>imtag</strong> -- the name of the file this subimage is referred to in the output</p></li>
+<li><p><strong>annot_imtag</strong> -- the name of the annotated image file this subimage is referred to in the output</p></li>
+<li><p><strong>parent_image_file</strong> -- the name of the file this subimage is derived from</p></li>
+<li><p><strong>healthy_obj_props</strong> -- list of HealthyAreas found in the subimage</p></li>
+<li><p><strong>leaf_area_props</strong> -- list of LeafAreas found in the subimage</p></li>
+<li><p><strong>lesion_area_props</strong> -- list of LesionAreas found in the subimage</p></li>
+<li><p><strong>lesion_centre_props</strong> -- list of LesionCentres found in the subimage</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="subimage.SubImage.create_results_dataframe">
+<code class="sig-name descname">create_results_dataframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">on_webserver</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subimage.SubImage.create_results_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates a pandas dataframe of results from the SubImage object
+:return: pandas.dataframe</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subimage.SubImage.write_annotated_sub_image">
+<code class="sig-name descname">write_annotated_sub_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subimage.SubImage.write_annotated_sub_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>create output annotated subimage jpeg with results overlay
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subimage.SubImage.write_sub_image">
+<code class="sig-name descname">write_sub_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subimage.SubImage.write_sub_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>write out subimage (nonannotated)
+:return: None</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="subimage.get_sub_images">
+<code class="sig-prename descclassname">subimage.</code><code class="sig-name descname">get_sub_images</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imfile</span></em>, <em class="sig-param"><span class="n">file_settings</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dest_folder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_lesion_area</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pixel_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_lc_ratio</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">min_lc_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">lc_prop_across_parent</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subimage.get_sub_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>extracts different leaves from a single image file, returning them as individual SubImage objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>imfile str -- path to the image</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>file_settings str -- FilterSettings object with image segmentation options</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>dest_folder str -- folder in which to place results files</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>min_lesion_area float -- minimum area for a lesion to pass filter. In either pixels or actual size if 'scale' passed</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>scale float -- pixels per real unit length, if known or computed earlier.</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>max_lc_ratio float -- maximum length/width ratio of lesion centre to pass filter</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>min_lc_size float -- minimum lesion centre size. Computed in real units if 'scale' passed. Computed as area of circle with same pixel volume as the centre.</p>
+</dd>
+<dt class="field-even">Param</dt>
+<dd class="field-even"><p>lc_prop_across_parent float -- minimum proportion lesion centre must be across the width of the parent lesion (in the row the centre centroid occurs) to pass filter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-imagearea"></span><dl class="py class">
+<dt id="imagearea.HealthyArea">
+<em class="property">class </em><code class="sig-prename descclassname">imagearea.</code><code class="sig-name descname">HealthyArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rprop</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">pixel_length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#imagearea.HealthyArea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="imagearea.ImageArea">
+<em class="property">class </em><code class="sig-prename descclassname">imagearea.</code><code class="sig-name descname">ImageArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rprop</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">pixel_length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#imagearea.ImageArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for image areas that are created by rp.get_subimages()
+Copies user attributes from skimage.measure.regionprops and
+adds a few attributes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size</strong> -- computed size of area if scale is provided in cm2</p></li>
+<li><p><strong>passed</strong> -- computed filter pass/fail. Can be NA if area does not have filter criteria</p></li>
+<li><p><strong>parent_lesion_region</strong> -- ID of parent (enclosing region) where exists</p></li>
+<li><p><strong>prop_across_parent</strong> -- computed distance across parent region width a lesion centre falls. Is NA for other regions</p></li>
+<li><p><strong>subimage_centre</strong> -- centre pixels of image area</p></li>
+</ul>
+</dd>
+<dt class="field-even">Scale</dt>
+<dd class="field-even"><p>scale of the image</p>
+</dd>
+<dt class="field-odd">Param</dt>
+<dd class="field-odd"><p>pixel_length -- length of side of one pixel, available when scale</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="imagearea.LeafArea">
+<em class="property">class </em><code class="sig-prename descclassname">imagearea.</code><code class="sig-name descname">LeafArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rprop</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">pixel_length</span></em><span class="sig-paren">)</span><a class="headerlink" href="#imagearea.LeafArea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt id="imagearea.LesionArea">
+<em class="property">class </em><code class="sig-prename descclassname">imagearea.</code><code class="sig-name descname">LesionArea</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rprop</span></em>, <em class="sig-param"><span class="n">scale</span></em>, <em class="sig-param"><span class="n">pixel_length</span></em>, <em class="sig-param"><span class="n">min_lesion_area</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#imagearea.LesionArea" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 

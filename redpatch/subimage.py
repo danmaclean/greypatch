@@ -204,7 +204,6 @@ class SubImage(object):
         """
         polys = []
         for rprop in list_of_rprops:
-            coords = []
             if isinstance(rprop, rp.LesionCentre):
                 coords =  rprop.corrected_coords
             else:

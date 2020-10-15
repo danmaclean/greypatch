@@ -136,19 +136,24 @@ SCALE_CARD_VAL = (0.25, 0.75)
 
 
 
-def circular_area_to_pixel_volume(area: int, scale: float) -> int:
-    """helps work out the pixel volume of a circular object at a given scale
-    area = area in cm2, scale = pixels per cm in this image, obtainiable from rp.griffin_scale_card()
+def pixel_volume_to_circular_area(pixels: int, scale: float) -> float:
+    """helps work out the area of a circular object with a similar pixel volume at the same scale
+    pixels = pixels in the object , scale = pixels per cm in this image, obtainable from rp.griffin_scale_card()
 
-    returns an int giving the number of pixels a circle of area would take up in this
-    image
+    returns a float giving the area a circle of that number of pixels would take up
     """
-    #radius of eqivalrent circular area in pixels
-    p_r = math.sqrt(area/math.pi)
-    #real radius of the circular area
-    r_r = p_r / scale
-    #volume of area in pixels
-    return math.pi * r_r * r_r
+
+    i = 1
+    r = 0
+    while i < pixels / 2.0:
+        i = i + (i + 2)
+        r += 1
+    r =  r / scale
+    return math.pi * (r**2)
+
+
+
+
 
 
 def threshold_hsv_img(im: np.ndarray,
@@ -480,7 +485,6 @@ def griffin_scale_card(hsv_img, h, s, v, side_length=5):
     labelled_image, _ = label_image(card_mask)
     region_props = get_object_properties(labelled_image, card_mask)
     plt.imshow(card_mask)
-    plt.savefig("mask.jpg")
     if len(region_props) > 0:
         biggest_obj_area = sorted(region_props, key=lambda rp: rp.area, reverse=True)[0].area  # assume biggest object is scale card
         side = math.sqrt(biggest_obj_area)

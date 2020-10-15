@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-# TODO webtool output
 
 """
 
 redpatch-batch-process
-A utility for running redpatch functions on a folder of images with some better settings.
+
+A utility for running redpatch pipeline on a folder of images.
 
 
 See the help:
@@ -20,14 +20,22 @@ Usage Examples:
     Use a scale card:
         redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
-    Use a known pixel per cm value
-        redpatch-batch-process --pixels_per_cm 472 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
-
-    Use on a server when user passes scale card
-        redpatch-batch-process --use_on_server --source_folder /var/www/tmp --destination_folder --filter_settings /var/www/tmp/filter.yml --scale_card_image /var/www/tmp/scale_img.jpg --scale_card_side_length 10
+    Use a known scale
+        redpatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Create a default filter settings YAML file:
         redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+
+    Set up for webtool use:
+
+        when user selects scale card and gives image with card in
+
+            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_image_name /var/www/tmp/scale_img.jpg
+
+        when user doesn't have a scale card image
+
+            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml
+
 """
 import math
 
@@ -65,7 +73,7 @@ Usage Examples:
     
         when user selects scale card and gives image with card in
     
-            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_card_image /var/www/tmp/scale_img.jpg
+            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_image_name /var/www/tmp/scale_img.jpg
             
         when user doesn't have a scale card image
         

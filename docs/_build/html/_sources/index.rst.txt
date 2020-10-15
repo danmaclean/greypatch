@@ -32,5 +32,12 @@ Indices and tables
 .. automodule:: report
    :members:
 
+.. automodule:: lesioncentre
+   :members:
 
+.. automodule:: subimage
+   :members:
+
+.. automodule:: imagearea
+   :members:
 

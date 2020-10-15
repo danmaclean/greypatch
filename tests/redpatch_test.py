@@ -1,5 +1,6 @@
 import pytest
 import numpy as np
+import math
 import redpatch as rp
 
 '''mock region properties object'''
@@ -154,6 +155,6 @@ def test_clean_labelled_mask(mask_to_label):
 def test_clear_background(sample_hsv, sample_threshold_bool, sample_threshold_hsv):
     assert np.array_equal( rp.clear_background(sample_hsv, sample_threshold_bool), sample_threshold_hsv)
 
-
-
+def test_pixel_volume_to_circular_area():
+    assert math.isclose(rp.pixel_volume_to_circular_area(50, 10), 0.503, abs_tol=0.05)
 

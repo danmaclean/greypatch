@@ -66,11 +66,11 @@ class RPReport(object):
         self.annotated_sub_images = {i : [] for i in images}
 
 
-    def add_subimages(self, image, subimages):
-        self.sub_images[image].append(subimages)
+    def add_subimages(self, s):
+        self.sub_images[s.parent_image_file].append(s.imtag)
 
-    def add_annotated_subimages(self, image, ann_subimgs):
-        self.annotated_sub_images[image].append(ann_subimgs)
+    def add_annotated_subimages(self, s):
+        self.annotated_sub_images[s.parent_image_file].append(s.annot_imtag)
 
     def _header(self):
         return "Redpatch Report"
