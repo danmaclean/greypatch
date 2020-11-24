@@ -37,13 +37,15 @@ Usage Examples:
             redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml
 
 """
-import math
+
 
 import redpatch as rp
 import os
 import sys
 import pandas as pd
 import argparse
+from pathlib import Path
+
 parser = argparse.ArgumentParser(add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description = """
 
 redpatch-batch-process
@@ -92,7 +94,7 @@ parser.add_argument("-n", "--scale_image_name", help="the name of the image to u
 parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=int)
 parser.add_argument("-j", "--max_lc_ratio", help="maximum length to width ratio a lesion centre can be", default=False, type = float)
 parser.add_argument("-k", "--min_lc_size", help="minimum size a lesion centre can be.", default=False, type=float)
-parser.add_argument("-m", "--lc_prop_across_parent", help="maximal proportion of leaf width lesion centre must be within to be included", default=False, type = float)
+parser.add_argument("-m", "--lc_prop_across_parent", help="proportion of lesion width the lesion centre position must exceed to be within to be included. counted from either side", default=False, type = float)
 args = parser.parse_args()
 
 
@@ -181,7 +183,9 @@ def batch_process(folder=".", settings="settings.yml"):
         SCALE = _find_scale(scale_image_name, fs, args.scale_card_side_length, args.pixels_per_cm)
         PIXEL_LENGTH = 1/SCALE
 
-    image_files = [os.path.join(folder, f) for f in os.listdir(folder)]
+
+    image_files = [str(file.resolve()) for file in Path(folder).iterdir() if
+                   file.is_file() and not file.name.startswith(".")]
     report = rp.RPReport(folder, image_files, fs)
     all_dfs = []
 
