@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='redpatch',
-    version='0.2.1',
+    version='0.2.2',
     packages=['redpatch', 'redpatch_notebooks'],
     url='https://github.com/TeamMacLean/redpatch',
     license='LICENSE.txt',
@@ -16,7 +16,7 @@ setup(
                                          'Using Threshold Sliders.ipynb',
                                          'Find Scale Card Filter Settings.ipynb'
                                          ]},
-    python_requires='>=3.7',
+    python_requires='>=3.6',
     install_requires=[
         "ipywidgets == 7.5.1",
         "ipython == 7.8.0",
