@@ -92,7 +92,7 @@ from ipywidgets import FloatRangeSlider, FloatProgress
 from IPython.display import display
 import ipywidgets as widgets
 import math
-from numba import njit
+#from numba import njit remove on rpi for lack of llvm version
 
 #: Default values for griffin named functions
 LEAF_AREA_HUE = tuple([i / 255 for i in (0, 255)])
@@ -191,7 +191,7 @@ def hsv_to_rgb255(img: np.ndarray) -> np.ndarray:
     """
     return (color.hsv2rgb(img) * 255).astype('int')
 
-@njit
+#@njit remove in rpi because requires special llvm version, not used in app anyway.
 def _threshold_three_channels(im: np.ndarray,
                               c1_limits: Tuple[Union[int, float], Union[int, float]] = (0, 1),
                               c2_limits: Tuple[Union[int, float], Union[int, float]] = (0, 1),
@@ -535,7 +535,7 @@ def _fast_threshold_preview(image: np.ndarray, height: int = 15,  width: int = 1
 
         thresh = threshold_hsv_img(i, h=h, s=s, v=v)
 
-        @njit
+        #@njit remove in rpi for lack of llvm
         def _do_(i, thresh):
             x_d,y_d,_ = i.shape
             for x in range(x_d):
