@@ -29,12 +29,18 @@ Needs a conda installation, for ARM compiled packages, use Berryconda pi3 https:
 
 Update conda channels.
 
-``conda config --add channels rpi
+``conda config --add channels rpi``
 
 Start a special env
 
 ``conda create --name rpcam python=3.6.6``
 ``source activate rpcam``
+
+Link the 'libgeos' library into the env 'lib' directory
+
+``sudo find / -iname "libgeos_c.so"`` returns e.g ``/usr/lib/arm-linux-gnueabihf/libgeos_c.so``
+``cd /home/pi/berryconda2/envs/rpcam/lib/``
+``ln -s /usr/lib/arm-linux-gnueabihf/libgeos_c.so libgeos_c.so``
 
 Install Pi Compatible Python Packages
 
