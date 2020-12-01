@@ -83,6 +83,7 @@ Usage Examples:
         
 """)
 
+
 parser.add_argument("-s","--source_folder", help='folder containing images to analyse', type = str)
 parser.add_argument("-d","--destination_folder", help='folder to write output. Created if does not exist. ')
 parser.add_argument("-f", "--filter_settings", help="file of filter settings to use.", default="default_filter.yml",type=str )
@@ -155,8 +156,12 @@ def _write_summary(dfs, destination_folder, scale = None):
     _write_out(os.path.join(destination_folder, "summary_results.csv"), summarised, index=False)
 
 def _write_tidy(dfs, destination_folder):
-    df = pd.concat(dfs, sort = True)
-    _write_out(os.path.join(destination_folder, "results.csv"), df, index=False)
+    df = []
+    try:
+        df = pd.concat(dfs, sort = True)
+        return _write_out(os.path.join(destination_folder, "results.csv"), df, index=False)
+    except ValueError:
+        return df
 
 def _find_scale(imfile, fs, side_length, pixels_per_cm):
         if side_length:

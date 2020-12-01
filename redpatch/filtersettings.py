@@ -107,7 +107,7 @@ class FilterSettings(object):
         :return: None
         """
         with open(infile) as file:
-            self.settings = yaml.load(file, Loader=yaml.FullLoader)
+            self.settings = yaml.load(file)
             return self
 
     def create_default_filter_file(self, file: str = "default_filter.yml") -> None:

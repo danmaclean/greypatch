@@ -369,8 +369,11 @@ def get_object_properties(label_array: np.ndarray, intensity_image: np.ndarray =
     :param: intensity_image np.ndarray -- the image on which properties are computed
     :return: list of skimage.measure.regionprops objects
     """
-    return measure.regionprops(label_array, intensity_image=intensity_image)
-
+    w,h = label_array.shape
+    if w > 1 and h > 1:
+        return measure.regionprops(label_array, intensity_image=intensity_image)
+    else:
+        return []
 
 def filter_region_property_list(region_props: List[measure._regionprops._RegionProperties],
                                 func: Callable[[measure._regionprops._RegionProperties], bool]) \
