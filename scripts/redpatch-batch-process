@@ -91,7 +91,7 @@ parser.add_argument("-l", "--scale_card_side_length", help="find a scale card in
 parser.add_argument("-p", "--pixels_per_cm", help="use a previously known value for pixels per centimetre", default=False, type=float)
 parser.add_argument("-w", "--use_on_server", help="use the tool on the redpatch webserver. Overrides some other options", default=False,action='store_true')
 parser.add_argument("-n", "--scale_image_name", help="the name of the image to use as the scale card image. Use on server only.", default=None)
-parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=int)
+parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=float)
 parser.add_argument("-j", "--max_lc_ratio", help="maximum length to width ratio a lesion centre can be", default=False, type = float)
 parser.add_argument("-k", "--min_lc_size", help="minimum size a lesion centre can be.", default=False, type=float)
 parser.add_argument("-m", "--lc_prop_across_parent", help="proportion of lesion width the lesion centre position must exceed to be within to be included. counted from either side", default=False, type = float)
@@ -128,6 +128,9 @@ if args.scale_card_side_length and args.pixels_per_cm:
     parser.print_help(sys.stderr)
     sys.exit("scale card side length AND pixels per cm supplied. Can only work with one.")
 
+if not args.scale_card_side_length and not args.pixels_per_cm:
+    parser.print_help(sys.stderr)
+    sys.exit("need exactly one of --scale_card_side_length or --pixels_per_cm")
 
 def _get_scale_card(imfile, fs, side_length):
     im = rp.load_as_hsv(imfile)
