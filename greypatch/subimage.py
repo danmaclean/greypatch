@@ -1,4 +1,4 @@
-import redpatch as rp
+import greypatch as rp
 import numpy as np
 from skimage import measure, io, color
 import skimage
@@ -7,23 +7,39 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from shapely.geometry.polygon import Polygon
+import warnings
+warnings.filterwarnings("ignore")
 
 
 def _get_object_properties(label_array: np.ndarray, intensity_image: np.ndarray = None):
     """given a label array returns a list of computed RegionProperties objects."""
     return measure.regionprops(label_array, intensity_image=intensity_image)
 
+def _ed(p1,p2):
+    """
+    calc euclidean distance between p1 and p2
+    :param p1: tuple/list two dimensional point
+    :param p2: tuple/list two dimensional point
+    :return: int distance in pixels
+    """
+    return np.linalg.norm(np.array(p1) - np.array(p2))
 
+
+def _make_match_dataframe(df):
+    df['matched_with'] = df.matched_with.astype(str)
+    o = df.query('area_type == "outer_lesion_area" &  matched_with != "None" ')
+    o['matched_with'] = o.matched_with.astype(int)
+    i = df.query('area_type == "inner_lesion_area" &  matched_with != "None" ')
+    m = o.merge(i, left_on='matched_with', right_on='label', how='left')
+    m['outer_inner_ratio_pixels'] = m['pixels_in_area_y'] / m['pixels_in_area_x']
+    return m
 
 def get_sub_images(imfile,
     file_settings = None, 
     dest_folder = None,
     min_lesion_area = None,
     scale = None,
-    pixel_length = None,
-    max_lc_ratio = None,
-    min_lc_size = None,
-    lc_prop_across_parent = None
+    pixel_length = None
 ):
     """
     extracts different leaves from a single image file, returning them as individual SubImage objects.
@@ -55,7 +71,7 @@ def get_sub_images(imfile,
     cleared_leaf_sub_images = [rp.clear_background(sub_images[i], sub_labels[i]) for i in range(len(sub_labels))]
     sub_image_objs = []
     for sub_i_idx, sub_i in enumerate(cleared_leaf_sub_images, 1):
-        sub_image_objs.append( rp.SubImage(sub_i, sub_i_idx, imfile, file_settings = file_settings, dest_folder = dest_folder, min_lesion_area = min_lesion_area, scale = scale, pixel_length = pixel_length, max_lc_ratio = max_lc_ratio, min_lc_size = min_lc_size, lc_prop_across_parent = lc_prop_across_parent ) )
+        sub_image_objs.append( rp.SubImage(sub_i, sub_i_idx, imfile, file_settings = file_settings, dest_folder = dest_folder, min_lesion_area = min_lesion_area, scale = scale, pixel_length = pixel_length  ) )
     return sub_image_objs
 
 
@@ -85,10 +101,7 @@ class SubImage(object):
     dest_folder = None,
     min_lesion_area = None,
     scale = None,
-    pixel_length = None,
-    max_lc_ratio = None,
-    min_lc_size = None,
-    lc_prop_across_parent = None
+    pixel_length = None
     ):
 
         self.sub_i = sub_i
@@ -103,9 +116,11 @@ class SubImage(object):
         self.annot_imtag = os.path.join(dest_folder, "{}_sub_image_{}{}".format(os.path.basename(parent_image_file), sub_i_idx, "_annotated.jpg"))
         self.parent_image_file = parent_image_file
         self.healthy_obj_props = self._get_healthy_areas(sub_i, file_settings, scale, pixel_length)
-        self.leaf_area_props =  self._get_leaf_areas(sub_i, file_settings,scale, pixel_length)
-        self.lesion_area_props = self._get_lesion_areas(sub_i, file_settings, scale, pixel_length, min_lesion_area = min_lesion_area)  # 0 to many per image
-        self.lesion_centre_props = self._get_lesion_centres(sub_i, self.lesion_area_props, scale = scale, pixel_length = pixel_length, max_lc_ratio = max_lc_ratio, min_lc_size = min_lc_size, lc_prop_across_parent=lc_prop_across_parent )
+        self.outer_lesion_area_props = self._get_lesion_areas(sub_i, file_settings, scale, pixel_length, key="outer_lesion_area", min_lesion_area = min_lesion_area)  # 0 to many per image
+        self.inner_lesion_area_props = self._get_lesion_areas(sub_i, file_settings, scale, pixel_length, key="inner_lesion_area", min_lesion_area = min_lesion_area)
+        self.matched_innerouter = self._match_innerouter()
+
+
 
     def _get_healthy_areas(self, im, fs,scale, pixel_length):
         """
@@ -139,49 +154,25 @@ class SubImage(object):
         leaf_area_properties = rp.get_object_properties(labelled_leaf_area)
         return [rp.LeafArea(o,scale,pixel_length) for o in leaf_area_properties]
 
-    def _get_lesion_areas(self, im, fs, scale, pixel_length, min_lesion_area = None):
+
+    def _get_lesion_areas(self, im, fs, scale, pixel_length, key='outer_lesion_area', min_lesion_area = None):
         """
-        Finds lesion areas according to filtersettings in fs
+        Finds brown lesion areas according to filtersettings in fs
 
         :param im: the image to search
         :param fs: a FilterSettings object
+        :param key: a FilterSettings object key string specifying which params to use (IE which lesion type to search for)
         :param min_lesion_area: the minimum area to set a LesionArea objects passed attribute to TRUE
         :return: list of LesionArea objects
         """
         lesion_area_mask, _ = rp.griffin_lesion_regions(im,
-                                                            h=fs['lesion_area']['h'],
-                                                            s=fs['lesion_area']['s'],
-                                                            v=fs['lesion_area']['v'])
+                                                        h=fs[key]['h'],
+                                                        s=fs[key]['s'],
+                                                        v=fs[key]['v'])
         labelled_lesion_area, _ = rp.label_image(lesion_area_mask)
         labelled_lesion_area_properties = rp.get_object_properties(labelled_lesion_area)
-        return [rp.LesionArea(o, scale, pixel_length, min_lesion_area = min_lesion_area) for o in labelled_lesion_area_properties]
-
-    def _get_lesion_centres(self, im,  lesion_area_region_prop_list,
-        scale = None,
-        pixel_length = None,
-        max_lc_ratio = None, 
-        min_lc_size = None, 
-        lc_prop_across_parent = None
-        ):
-        """
-        Finds lesion centres in LesionAreas
-        :param im: image to find LesionCentres in
-        :param lesion_area_region_prop_list: LesionAreas to search in
-        :param scale: scale of the image
-        :param max_lc_ratio: maximum length to width for the LesionCentre to be marked as passed
-        :param min_lc_size: minimum size (real units or pixels dependent on scale) for LesionCentre to be marked as passed
-        :param lc_prop_across_parent: minimum proportion lesion centre must be across the width of the parent lesion (in the row the centre centroid occurs) to pass filter
-        :return: list of LesionCentres
-        """
-
-        annotated_lesion_centre_props = []
-        for lesion_area in lesion_area_region_prop_list:
-            #if lesion_area.area >= min_lesion_area:
-            raw_lesion_centre_props = rp.griffin_lesion_centres(im, lesion_area)
-            for r in raw_lesion_centre_props:
-                annotated_lesion_centre_props.append( rp.LesionCentre(rprop = r, parent_rprop = lesion_area, scale = scale, pixel_length = pixel_length, max_ratio = max_lc_ratio, minimum_size = min_lc_size, prop_across_parent = lc_prop_across_parent) )
-        return annotated_lesion_centre_props
-
+        return [rp.LesionArea(o, scale, pixel_length, min_lesion_area=min_lesion_area) for o in
+                labelled_lesion_area_properties]
 
     def _calc_size(self, img):
         """
@@ -196,6 +187,46 @@ class SubImage(object):
         inches_h = h / dpi
         return tuple([inches_w, inches_h])
 
+
+
+    def _match_innerouter(self):
+        """
+        for each inner lesion finds the closest outer lesion and matches it up.
+
+        :return: list of lists, [inner_lesion, outer_lesion]
+        """
+        inners = {}
+        outers = {}
+        matches = []
+
+
+        for i, inner in enumerate(self.inner_lesion_area_props):
+            if inner.passed:
+                min = np.inf
+                for o, outer in enumerate(self.outer_lesion_area_props):
+                    if outer.passed:
+                        #print("inner {} - outer {} : {}" .format(inner.centroid, outer.centroid, _ed(np.array(inner.centroid), np.array(outer.centroid) ) ) )
+                        if _ed(np.array(inner.centroid), np.array(outer.centroid)) < min:
+                            inners[i] = o
+
+        for o, outer in enumerate(self.outer_lesion_area_props):
+            if outer.passed:
+                min = np.inf
+                for i, inner in enumerate(self.inner_lesion_area_props):
+                    if inner.passed:
+                        if _ed(np.array(outer.centroid), np.array(inner.centroid)) < min:
+                            outers[o] = i
+
+        for current_inner in inners.keys():
+            best_outer = inners[current_inner]
+            if best_outer in outers and outers[best_outer] == current_inner: #reciprocal nearest
+                matches.append([current_inner, best_outer])
+                self.inner_lesion_area_props[current_inner].matches_with = str(self.outer_lesion_area_props[best_outer].label)
+                self.outer_lesion_area_props[best_outer].matches_with = str(self.inner_lesion_area_props[current_inner].label)
+
+
+
+
     def _make_polygons_for_image(self, list_of_rprops ):
         """
         make overlay colour patches for the annotated output image
@@ -204,10 +235,7 @@ class SubImage(object):
         """
         polys = []
         for rprop in list_of_rprops:
-            if isinstance(rprop, rp.LesionCentre):
-                coords =  rprop.corrected_coords
-            else:
-                coords = rprop.coords
+            coords = rprop.coords
             if len(coords) > 2: #need 3 points for a polygon
                 p = np.asarray(coords)
                 p.T[[0,1]] = p.T[[1,0]]
@@ -225,29 +253,36 @@ class SubImage(object):
         fig = plt.figure(figsize=size)
         img = skimage.img_as_ubyte(color.hsv2rgb(self.sub_i))
         plt.imshow(img)
-        hcol = (127/255, 191/255, 63/255, 0.5 )
-        lcol = (243/255, 80/255, 21/255, 0.5 )
-        ccol = (248/255, 252/255, 17/255, 0.66)
+        brown = (165/255, 42/255, 42/255, 0.5)
+        grey = (125/255, 125/255, 125/255, 0.5)
+        green = (45/255, 90/255, 39/255, 0.5)
         healthy_polys = self._make_polygons_for_image(self.healthy_obj_props)
-        lesion_polys = self._make_polygons_for_image(self.lesion_area_props)
-        centre_polys = self._make_polygons_for_image(self.lesion_centre_props)
+        outer_lesion_polys = self._make_polygons_for_image(self.outer_lesion_area_props)
+
+        inner_lesion_polys = self._make_polygons_for_image(self.inner_lesion_area_props)
 
         for p in healthy_polys:
-            plt.plot(p[0], p[1], color=hcol )
+            plt.plot(p[0], p[1], color=green )
 
-        for p in lesion_polys:
-            plt.plot(p[0], p[1], color=lcol )
+        for p in outer_lesion_polys:
+            plt.plot(p[0], p[1], color=brown )
 
-        for p in centre_polys:
-            plt.plot(p[0], p[1], color=ccol)
+        for p in inner_lesion_polys:
+            plt.plot(p[0], p[1], color=grey)
 
         ax = plt.gca()
-        for c in self.lesion_centre_props:
-            ax.annotate(str(c.label), xy=tuple(reversed(c.corrected_centroid)), xycoords='data', color="white")
+        for p in self.outer_lesion_area_props:
+            if p.passed:
+                l = "outer: "  + str(p.label)
+                ax.annotate(l, xy=tuple(reversed(p.centroid)), xycoords='data', color="white")
+        for p in self.inner_lesion_area_props:
+            if p.passed:
+                l = "inner: " + str(p.label)
+                ax.annotate(l, xy=tuple(reversed(p.centroid)), xycoords='data', color="white")
 
-        h_patch = mpatches.Patch(color=hcol, label='Healthy')
-        l_patch = mpatches.Patch(color=lcol, label="Lesion")
-        c_patch = mpatches.Patch(color=ccol, label="Centres")
+        h_patch = mpatches.Patch(color=green, label='Healthy')
+        l_patch = mpatches.Patch(color=brown, label="Outer Lesion")
+        c_patch = mpatches.Patch(color=grey, label="Inner Lesion")
         plt.legend(bbox_to_anchor=(1, 1), bbox_transform=plt.gcf().transFigure,handles=[h_patch,l_patch,c_patch],loc="upper right")
         plt.savefig(self.annot_imtag, dpi = 72, )
         plt.close(fig)
@@ -273,34 +308,38 @@ class SubImage(object):
         d = {}
         #d = {p: [rp[p] for rp in regions] for p in props}
         d['label'] = [r.label for r in regions]
-        d['pixels_in_area'] = [r.area for r in regions]
         d['area_type'] = [area_type] * nrow
+        d['matched_with'] = [r.matches_with for r in regions]
+        d['passed'] = [r.passed for r in regions]
+        d['pixels_in_area'] = [r.area for r in regions]
+        d['scale'] =  [r.scale for r in regions]
+        d['size'] = [r.size for r in regions]
         d['image_file'] = [image_file] * nrow
         d['sub_image_index'] = [sub_image_index] * nrow
-        d['scale'] =  [r.scale for r in regions]
-        d['passed'] = [r.passed for r in regions]
-        d['size'] = [r.size for r in regions]
-        d['parent_lesion_region'] = [r.parent_lesion_region for r in regions]
-        d['long_axis_to_short_axis_ratio'] = [r.long_axis_to_short_axis_ratio for r in regions]
-        d['subimage_centre'] = [','.join(map(str, [int(i) for i in r.centroid])) for r in regions]
-        if area_type == 'lesion_centre':
-            d['subimage_centre'] = [','.join(map(str, [int(i) for i in lc.corrected_centroid] )) for lc in regions]
 
 
         return pd.DataFrame(d)
 
 
-    def create_results_dataframe(self, on_webserver=False):
+    def create_results_dataframe(self, passed_only=True):
         """
         generates a pandas dataframe of results from the SubImage object
         :return: pandas.dataframe
         """
-        hdf = self._make_pandas(self.healthy_obj_props, area_type="healthy_region", image_file=self.parent_image_file, sub_image_index=self.index)
-        ldf = self._make_pandas(self.lesion_area_props, area_type="lesion_region", image_file=self.parent_image_file, sub_image_index=self.index)
-        ladf = self._make_pandas(self.leaf_area_props, area_type="leaf_area", image_file=self.parent_image_file, sub_image_index=self.index)
-        if not on_webserver:
-            lcdf = self._make_pandas(self.lesion_centre_props, area_type="lesion_centre",image_file=self.parent_image_file, sub_image_index=self.index)
-            return hdf.append([ladf, ldf, lcdf], ignore_index=True)
-        return hdf.append([ladf, ldf]).drop('parent_lesion_region', axis=1)
+        #hdf = self._make_pandas(self.healthy_obj_props, area_type="healthy_region", image_file=self.parent_image_file, sub_image_index=self.index)
+        outer_df = self._make_pandas(self.outer_lesion_area_props, area_type = "outer_lesion_area", image_file=self.parent_image_file, sub_image_index=self.index)
+        inner_df = self._make_pandas(self.inner_lesion_area_props, area_type = "inner_lesion_area", image_file=self.parent_image_file, sub_image_index=self.index)
+        #ldf = self._make_pandas(self.lesion_area_props, area_type="lesion_region", image_file=self.parent_image_file, sub_image_index=self.index)
+#        ladf = self._make_pandas(self.leaf_area_props, area_type="leaf_area", image_file=self.parent_image_file, sub_image_index=self.index)
+#        if not on_webserver:
+#            lcdf = self._make_pandas(self.lesion_centre_props, area_type="lesion_centre",image_file=self.parent_image_file, sub_image_index=self.index)
+#            return hdf.append([ladf, ldf, lcdf], ignore_index=True)
+        all = outer_df.append([inner_df]) #.append([ladf, ldf]).drop('parent_lesion_region', axis=1)
+        if passed_only:
+            return all[all['passed']]
+        return all
+
+
+
 
 

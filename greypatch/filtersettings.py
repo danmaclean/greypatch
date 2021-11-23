@@ -1,7 +1,7 @@
 """
 filtersettings
 
-A module for creating filter settings for redpatch experiments
+A module for creating filter settings for greypatch experiments
 
 
 Workflow Overview
@@ -19,7 +19,7 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-        import redpatch as rp
+        import greypatch as rp
         fs = rp.FilterSettings()
 
 2. Add some settings
@@ -65,7 +65,7 @@ Basic Usage
 
 import yaml
 from typing import Tuple
-import redpatch as rp
+import greypatch as rp
 
 class FilterSettings(object):
     """

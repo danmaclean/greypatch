@@ -4,7 +4,7 @@
 <html lang="python">
   <head>
     <meta charset="utf-8" />
-    <title>Welcome to redpatch&#39;s documentation! &#8212; redpatch 0.0.1 documentation</title>
+    <title>Welcome to greypatch&#39;s documentation! &#8212; greypatch 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,8 +30,8 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-redpatch-s-documentation">
-<h1>Welcome to redpatch's documentation!<a class="headerlink" href="#welcome-to-redpatch-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="welcome-to-greypatch-s-documentation">
+<h1>Welcome to greypatch's documentation!<a class="headerlink" href="#welcome-to-greypatch-s-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
 </div>
@@ -42,7 +42,7 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<span class="target" id="module-redpatch"></span><p>redpatch</p>
+<span class="target" id="module-greypatch"></span><p>greypatch</p>
 <p>A module for segmenting diseased leaf images to find healthy regions, lesion associated regions and lesion centres.</p>
 <div class="section" id="workflow-overview">
 <h2>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Permalink to this headline">¶</a></h2>
@@ -63,7 +63,7 @@
 <ol class="arabic">
 <li><p>Import module</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redpatch</span> <span class="k">as</span> <span class="nn">rp</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">greypatch</span> <span class="k">as</span> <span class="nn">rp</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -119,98 +119,98 @@
 </li>
 </ol>
 <dl class="py data">
-<dt id="redpatch.HEALTHY_BLUE">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_BLUE</code><em class="property"> = (0, 255)</em><a class="headerlink" href="#redpatch.HEALTHY_BLUE" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_BLUE">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_BLUE</code><em class="property"> = (0, 255)</em><a class="headerlink" href="#greypatch.HEALTHY_BLUE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.HEALTHY_GREEN">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_GREEN</code><em class="property"> = (120, 175)</em><a class="headerlink" href="#redpatch.HEALTHY_GREEN" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_GREEN">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_GREEN</code><em class="property"> = (120, 175)</em><a class="headerlink" href="#greypatch.HEALTHY_GREEN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.HEALTHY_HUE">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_HUE</code><em class="property"> = (0.1568627450980392, 1.0)</em><a class="headerlink" href="#redpatch.HEALTHY_HUE" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_HUE">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_HUE</code><em class="property"> = (0.1568627450980392, 1.0)</em><a class="headerlink" href="#greypatch.HEALTHY_HUE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.HEALTHY_RED">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_RED</code><em class="property"> = (4, 155)</em><a class="headerlink" href="#redpatch.HEALTHY_RED" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_RED">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_RED</code><em class="property"> = (4, 155)</em><a class="headerlink" href="#greypatch.HEALTHY_RED" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.HEALTHY_SAT">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_SAT</code><em class="property"> = (0.19607843137254902, 1.0)</em><a class="headerlink" href="#redpatch.HEALTHY_SAT" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_SAT">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_SAT</code><em class="property"> = (0.19607843137254902, 1.0)</em><a class="headerlink" href="#greypatch.HEALTHY_SAT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.HEALTHY_VAL">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">HEALTHY_VAL</code><em class="property"> = (0.0, 1.0)</em><a class="headerlink" href="#redpatch.HEALTHY_VAL" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.HEALTHY_VAL">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">HEALTHY_VAL</code><em class="property"> = (0.0, 1.0)</em><a class="headerlink" href="#greypatch.HEALTHY_VAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LEAF_AREA_HUE">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LEAF_AREA_HUE</code><em class="property"> = (0.0, 1.0)</em><a class="headerlink" href="#redpatch.LEAF_AREA_HUE" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LEAF_AREA_HUE">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LEAF_AREA_HUE</code><em class="property"> = (0.0, 1.0)</em><a class="headerlink" href="#greypatch.LEAF_AREA_HUE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LEAF_AREA_SAT">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LEAF_AREA_SAT</code><em class="property"> = (0.19607843137254902, 1.0)</em><a class="headerlink" href="#redpatch.LEAF_AREA_SAT" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LEAF_AREA_SAT">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LEAF_AREA_SAT</code><em class="property"> = (0.19607843137254902, 1.0)</em><a class="headerlink" href="#greypatch.LEAF_AREA_SAT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LEAF_AREA_VAL">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LEAF_AREA_VAL</code><em class="property"> = (0.1568627450980392, 1.0)</em><a class="headerlink" href="#redpatch.LEAF_AREA_VAL" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LEAF_AREA_VAL">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LEAF_AREA_VAL</code><em class="property"> = (0.1568627450980392, 1.0)</em><a class="headerlink" href="#greypatch.LEAF_AREA_VAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LESION_HUE">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LESION_HUE</code><em class="property"> = (0.0, 0.1607843137254902)</em><a class="headerlink" href="#redpatch.LESION_HUE" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LESION_HUE">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LESION_HUE</code><em class="property"> = (0.0, 0.1607843137254902)</em><a class="headerlink" href="#greypatch.LESION_HUE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LESION_SAT">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LESION_SAT</code><em class="property"> = (0.14901960784313725, 1.0)</em><a class="headerlink" href="#redpatch.LESION_SAT" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LESION_SAT">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LESION_SAT</code><em class="property"> = (0.14901960784313725, 1.0)</em><a class="headerlink" href="#greypatch.LESION_SAT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.LESION_VAL">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">LESION_VAL</code><em class="property"> = (0.43529411764705883, 1.0)</em><a class="headerlink" href="#redpatch.LESION_VAL" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.LESION_VAL">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">LESION_VAL</code><em class="property"> = (0.43529411764705883, 1.0)</em><a class="headerlink" href="#greypatch.LESION_VAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.SCALE_CARD_HUE">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">SCALE_CARD_HUE</code><em class="property"> = (0.61, 1.0)</em><a class="headerlink" href="#redpatch.SCALE_CARD_HUE" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.SCALE_CARD_HUE">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">SCALE_CARD_HUE</code><em class="property"> = (0.61, 1.0)</em><a class="headerlink" href="#greypatch.SCALE_CARD_HUE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.SCALE_CARD_SAT">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">SCALE_CARD_SAT</code><em class="property"> = (0.17, 1.0)</em><a class="headerlink" href="#redpatch.SCALE_CARD_SAT" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.SCALE_CARD_SAT">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">SCALE_CARD_SAT</code><em class="property"> = (0.17, 1.0)</em><a class="headerlink" href="#greypatch.SCALE_CARD_SAT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py data">
-<dt id="redpatch.SCALE_CARD_VAL">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">SCALE_CARD_VAL</code><em class="property"> = (0.25, 0.75)</em><a class="headerlink" href="#redpatch.SCALE_CARD_VAL" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.SCALE_CARD_VAL">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">SCALE_CARD_VAL</code><em class="property"> = (0.25, 0.75)</em><a class="headerlink" href="#greypatch.SCALE_CARD_VAL" title="Permalink to this definition">¶</a></dt>
 <dd><p>Default values for griffin named functions</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.clean_labelled_mask">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">clean_labelled_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">region_props</span><span class="p">:</span> <span class="n">List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.clean_labelled_mask" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.clean_labelled_mask">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">clean_labelled_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">region_props</span><span class="p">:</span> <span class="n">List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.clean_labelled_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes unwanted object pixels from a mask.</p>
 <p>Given a label array, sets the labels not represented in region_props to Zero
 removing them from the image. Intended to be used on label images</p>
@@ -228,15 +228,15 @@ removing them from the image. Intended to be used on label images</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.clear_background">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">clear_background</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">mask</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.clear_background" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.clear_background">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">clear_background</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">mask</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.clear_background" title="Permalink to this definition">¶</a></dt>
 <dd><p>given an image and a binary mask, clears all pixels in the image (ie sets to zero)
 the zero/false pixels in the mask</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.extract_image_segment">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">extract_image_segment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">region_prop</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.extract_image_segment" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.extract_image_segment">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">extract_image_segment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">region_prop</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.extract_image_segment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a rectangular segment of an image covering a region object.</p>
 <p>Given 3D hsv_img returns a slice covered by the bounding box of region_prop</p>
 <dl class="field-list simple">
@@ -253,8 +253,8 @@ the zero/false pixels in the mask</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.filter_region_property_list">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">filter_region_property_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_props</span><span class="p">:</span> <span class="n">List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><span class="p">, </span>bool<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><a class="headerlink" href="#redpatch.filter_region_property_list" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.filter_region_property_list">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">filter_region_property_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">region_props</span><span class="p">:</span> <span class="n">List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">func</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><span class="p">, </span>bool<span class="p">]</span></span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><a class="headerlink" href="#greypatch.filter_region_property_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters region props objects from a list if they do not satisfy a condition.</p>
 <p>Given a list of region props, and a function that returns True/False for each region prop
 Returns a list of region props that have passed</p>
@@ -272,8 +272,8 @@ Returns a list of region props that have passed</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.get_object_properties">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">get_object_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">intensity_image</span><span class="p">:</span> <span class="n">numpy.ndarray</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><a class="headerlink" href="#redpatch.get_object_properties" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.get_object_properties">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">get_object_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">intensity_image</span><span class="p">:</span> <span class="n">numpy.ndarray</span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; List<span class="p">[</span>skimage.measure._regionprops.RegionProperties<span class="p">]</span><a class="headerlink" href="#greypatch.get_object_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute object properties. EG. area.</p>
 <p>Given a label array returns a list of computed RegionProperties objects.</p>
 <dl class="field-list simple">
@@ -290,8 +290,8 @@ Returns a list of region props that have passed</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.griffin_healthy_regions">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">griffin_healthy_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#redpatch.griffin_healthy_regions" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.griffin_healthy_regions">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">griffin_healthy_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#greypatch.griffin_healthy_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform Ciaran Griffin's Healthy Region extraction.</p>
 <p>Given an image in hsv applies Ciaran Griffin's detection for healthy regions.
 returns the mask of pixels and the pixel volume.</p>
@@ -315,36 +315,36 @@ returns the mask of pixels and the pixel volume.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.griffin_leaf_regions">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">griffin_leaf_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#redpatch.griffin_leaf_regions" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.griffin_leaf_regions">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">griffin_leaf_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#greypatch.griffin_leaf_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>given an image in hsv applies Ciaran Griffin's detection for leaf area regions.
 applies a hsv_space colour threshold and fills that mask for holes.
 returns a binary mask and object count.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.griffin_lesion_centres">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">griffin_lesion_centres</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">lesion_region</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#redpatch.griffin_lesion_centres" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.griffin_lesion_centres">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">griffin_lesion_centres</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">lesion_region</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">2.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#greypatch.griffin_lesion_centres" title="Permalink to this definition">¶</a></dt>
 <dd><p>finds lesion centres in a given lesion region</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.griffin_lesion_regions">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">griffin_lesion_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 0.1607843137254902</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.14901960784313725, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.43529411764705883, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#redpatch.griffin_lesion_regions" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.griffin_lesion_regions">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">griffin_lesion_regions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 0.1607843137254902</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.14901960784313725, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.43529411764705883, 1.0</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#greypatch.griffin_lesion_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>given an image in hsv applies Ciaran Griffin's detection for lesion regions.
 applies a hsv_space colour threshold,
 returns a labelled mask of objects and the object count.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.griffin_scale_card">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">griffin_scale_card</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">side_length</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#redpatch.griffin_scale_card" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.griffin_scale_card">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">griffin_scale_card</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hsv_img</span></em>, <em class="sig-param"><span class="n">h</span></em>, <em class="sig-param"><span class="n">s</span></em>, <em class="sig-param"><span class="n">v</span></em>, <em class="sig-param"><span class="n">side_length</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#greypatch.griffin_scale_card" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns pixels per cm of scale card object</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.hsv_to_rgb255">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">hsv_to_rgb255</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.hsv_to_rgb255" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.hsv_to_rgb255">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">hsv_to_rgb255</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.hsv_to_rgb255" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert HSV image to RGB image.</p>
 <p>Given an HSV image in (0.0,1.0) range, converts to RGB image in (0,255). Usually needed prior to viewing as most viewers interpret images as RGB.</p>
 <dl class="field-list simple">
@@ -358,8 +358,8 @@ returns a labelled mask of objects and the object count.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.is_long_and_large">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">is_long_and_large</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">major_to_minor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">min_area</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">90000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>bool<span class="p">]</span><a class="headerlink" href="#redpatch.is_long_and_large" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.is_long_and_large">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">is_long_and_large</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">major_to_minor</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2</span></em>, <em class="sig-param"><span class="n">min_area</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">90000</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>bool<span class="p">]</span><a class="headerlink" href="#greypatch.is_long_and_large" title="Permalink to this definition">¶</a></dt>
 <dd><p>&quot;
 Work out whether an object is long and large.</p>
 <p>Given a region props object works ; returns True if the object represented has a
@@ -382,8 +382,8 @@ False otherwise and None if not calculable</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.is_not_small">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">is_not_small</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">min_area</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2500</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>bool<span class="p">]</span><a class="headerlink" href="#redpatch.is_not_small" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.is_not_small">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">is_not_small</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span><span class="p">:</span> <span class="n">skimage.measure._regionprops.RegionProperties</span></em>, <em class="sig-param"><span class="n">min_area</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">2500</span></em><span class="sig-paren">)</span> &#x2192; Optional<span class="p">[</span>bool<span class="p">]</span><a class="headerlink" href="#greypatch.is_not_small" title="Permalink to this definition">¶</a></dt>
 <dd><p>&quot;
 Work out whether an object is not small.</p>
 <p>Given a region props object this function returns True if its area is greater than min_area.
@@ -402,8 +402,8 @@ False if not and None if the value is not calculable</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.label_image">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">label_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">structure</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#redpatch.label_image" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.label_image">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">label_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">structure</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">output</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; Tuple<span class="p">[</span>numpy.ndarray<span class="p">, </span>int<span class="p">]</span><a class="headerlink" href="#greypatch.label_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates labels for the objects in an image.</p>
 <p>Given a binary mask array, returns a version with the distinct islands labelled by integers,
 and a count of objects found. Thin wrapper around ndi.label</p>
@@ -421,8 +421,8 @@ and a count of objects found. Thin wrapper around ndi.label</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.load_as_hsv">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">load_as_hsv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.load_as_hsv" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.load_as_hsv">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">load_as_hsv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fname</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.load_as_hsv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a file into HSV colour space.</p>
 <p>Takes a file path and opens the image then converts to HSV colour space.
 returns numpy array dtype float 64. Strips the alpha (fourth) channel if it exists.
@@ -438,16 +438,16 @@ Input must be colour image. One channel images will be rejected.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.pixel_volume_to_circular_area">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">pixel_volume_to_circular_area</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pixels</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#redpatch.pixel_volume_to_circular_area" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.pixel_volume_to_circular_area">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">pixel_volume_to_circular_area</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pixels</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#greypatch.pixel_volume_to_circular_area" title="Permalink to this definition">¶</a></dt>
 <dd><p>helps work out the area of a circular object with a similar pixel volume at the same scale
 pixels = pixels in the object , scale = pixels per cm in this image, obtainable from rp.griffin_scale_card()</p>
 <p>returns a float giving the area a circle of that number of pixels would take up</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.preview_hsv">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">preview_hsv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#redpatch.preview_hsv" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.preview_hsv">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">preview_hsv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#greypatch.preview_hsv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw an HSV image to screen.</p>
 <p>Given an HSV image, generates a preview image and draws to screen.
 Intended for use in IPython and interactive sessions as the plot renders immediately.</p>
@@ -468,8 +468,8 @@ Intended for use in IPython and interactive sessions as the plot renders immedia
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.preview_mask">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">preview_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#redpatch.preview_mask" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.preview_mask">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">preview_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">m</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#greypatch.preview_mask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a mask to screen.</p>
 <p>Given a binary bool mask array draws a plot in two colours black = 1/True, white = 0/False.
 Intended for use in IPython and interactive sessions as the plot renders immediately</p>
@@ -490,8 +490,8 @@ Intended for use in IPython and interactive sessions as the plot renders immedia
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.preview_object_labels">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">preview_object_labels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">binary_image</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#redpatch.preview_object_labels" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.preview_object_labels">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">preview_object_labels</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label_array</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">binary_image</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">5</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#greypatch.preview_object_labels" title="Permalink to this definition">¶</a></dt>
 <dd><p>Draw a preview image of objects in a mask, colouring by labels.</p>
 <p>Given a labelled object array from rp.label_image and a background binary image, returns a plot with
 the objects described in the labelled array coloured in.
@@ -507,8 +507,8 @@ Intended for use in IPython and interactive sessions as the plot renders immedia
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.run_threshold_preview">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">run_threshold_preview</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">15</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">15</span></em>, <em class="sig-param"><span class="n">slider_width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">500</span></em>, <em class="sig-param"><span class="n">perfect</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.25</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#redpatch.run_threshold_preview" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.run_threshold_preview">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">run_threshold_preview</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">height</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">15</span></em>, <em class="sig-param"><span class="n">width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">15</span></em>, <em class="sig-param"><span class="n">slider_width</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="default_value">500</span></em>, <em class="sig-param"><span class="n">perfect</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="default_value">False</span></em>, <em class="sig-param"><span class="n">scale</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0.25</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#greypatch.run_threshold_preview" title="Permalink to this definition">¶</a></dt>
 <dd><p>Given an HSV image, generates some sliders and an overlay image. Shows the image colouring the
 pixels that are included in the sliders thresholds in red. Note this does not return an image or
 mask of those pixels, its just a tool for finding the thresholds</p>
@@ -516,8 +516,8 @@ mask of those pixels, its just a tool for finding the thresholds</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="redpatch.threshold_hsv_img">
-<code class="sig-prename descclassname">redpatch.</code><code class="sig-name descname">threshold_hsv_img</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">im</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#redpatch.threshold_hsv_img" title="Permalink to this definition">¶</a></dt>
+<dt id="greypatch.threshold_hsv_img">
+<code class="sig-prename descclassname">greypatch.</code><code class="sig-name descname">threshold_hsv_img</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">im</span><span class="p">:</span> <span class="n">numpy.ndarray</span></em>, <em class="sig-param"><span class="n">h</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.1568627450980392, 1.0</span></em>, <em class="sig-param"><span class="n">s</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.19607843137254902, 1.0</span></em>, <em class="sig-param"><span class="n">v</span><span class="p">:</span> <span class="n">Tuple<span class="p">[</span>float<span class="p">, </span>float<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">0.0, 1.0</span></em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#greypatch.threshold_hsv_img" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selects pixels passing an HSV image threshold in all three channels.</p>
 <p>Returns a logical binary mask array (dtype bool of dimension im ( an HSV image) in which pixels in im pass the lower
 and upper thresholds specified in h, s and v (hue lower,upper; sat lower,upper and val lower, upper;
@@ -543,7 +543,7 @@ respectively)</p>
 
 </div>
 <span class="target" id="module-filtersettings"></span><p>filtersettings</p>
-<p>A module for creating filter settings for redpatch experiments</p>
+<p>A module for creating filter settings for greypatch experiments</p>
 <div class="section" id="id1">
 <h2>Workflow Overview<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
@@ -557,7 +557,7 @@ respectively)</p>
 <ol class="arabic">
 <li><p>Import module, create empty object</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redpatch</span> <span class="k">as</span> <span class="nn">rp</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">greypatch</span> <span class="k">as</span> <span class="nn">rp</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">FilterSettings</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -683,7 +683,7 @@ respectively)</p>
 <ol class="arabic">
 <li><p>Import module and create widget</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redpatch</span> <span class="k">as</span> <span class="nn">rp</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">greypatch</span> <span class="k">as</span> <span class="nn">rp</span>
 <span class="n">f</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">FileBrowser</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">widget</span><span class="p">()</span>
 </pre></div>
@@ -705,7 +705,7 @@ respectively)</p>
 </ol>
 </div>
 <span class="target" id="module-report"></span><p>report</p>
-<p>A module for creating redpatch run reports; used by 'redpatch-batch-process'</p>
+<p>A module for creating greypatch run reports; used by 'greypatch-batch-process'</p>
 <div class="section" id="id5">
 <h2>Workflow Overview<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
@@ -719,7 +719,7 @@ respectively)</p>
 <ol class="arabic">
 <li><p>Import module and create object</p>
 <blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">redpatch</span> <span class="k">as</span> <span class="nn">rp</span>
+<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">greypatch</span> <span class="k">as</span> <span class="nn">rp</span>
 <span class="n">fs</span> <span class="o">=</span> <span class="n">rp</span><span class="o">.</span><span class="n">FilterSettings</span><span class="p">()</span>
 <span class="n">fs</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;settings.yml&quot;</span><span class="p">)</span>
 <span class="n">source_folder</span> <span class="o">=</span> <span class="s2">&quot;some/folder&quot;</span>
@@ -908,7 +908,7 @@ adds a few attributes</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">redpatch</a></h1>
+<h1 class="logo"><a href="#">greypatch</a></h1>
 
 
 

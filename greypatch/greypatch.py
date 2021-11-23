@@ -1,5 +1,5 @@
 """
-redpatch
+greypatch
 
 A module for segmenting diseased leaf images to find healthy regions, lesion associated regions and lesion centres.
 
@@ -25,7 +25,7 @@ Basic Usage
     .. highlight:: python
     .. code-block:: python
 
-        import redpatch as rp
+        import greypatch as rp
 
 2. Create an IPython file browser to select images
 
@@ -453,9 +453,9 @@ def griffin_lesion_regions(hsv_img, h: Tuple[float, float] = LESION_HUE, s: Tupl
     applies a hsv_space colour threshold,
     returns a labelled mask of objects and the object count."""
     mask = threshold_hsv_img(hsv_img, h=h, s=s, v=v).astype(int)
-    lesion_mask = ndi.binary_fill_holes(mask)
-    return lesion_mask, np.sum(mask)
-
+    #lesion_mask = ndi.binary_fill_holes(mask)
+    #return lesion_mask, np.sum(mask)
+    return mask, np.sum(mask)
 
 def griffin_leaf_regions(hsv_img, h: Tuple[float, float] = LEAF_AREA_HUE, s: Tuple[float, float] = LEAF_AREA_SAT,
                          v: Tuple[float, float] = LEAF_AREA_VAL) -> Tuple[np.ndarray, int]:

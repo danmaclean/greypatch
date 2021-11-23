@@ -1,5 +1,5 @@
 import pytest
-import redpatch as rp
+import greypatch as rp
 
 
 

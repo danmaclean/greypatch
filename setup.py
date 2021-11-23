@@ -1,21 +1,15 @@
 from setuptools import setup
 
 setup(
-    name='redpatch',
-    version='0.2.4',
-    packages=['redpatch', 'redpatch_notebooks'],
-    url='https://github.com/TeamMacLean/redpatch',
+    name='greypatch',
+    version='0.1.0',
+    packages=['greypatch'],
+    url='https://github.com/TeamMacLean/greypatch',
     license='LICENSE.txt',
     author='Dan MacLean',
     author_email='dan.maclean@tsl.ac.uk',
-    description='Finding Disease Lesions in Plant Leaves',
-    scripts=['scripts/redpatch-start', 'scripts/redpatch-batch-process'],
-    include_package_data=True,
-    package_data={"redpatch_notebooks": ['Redpatch Basic Use Example.ipynb',
-                                         'leaf_and_square.jpg', 'single_input.jpg',
-                                         'Using Threshold Sliders.ipynb',
-                                         'Find Scale Card Filter Settings.ipynb'
-                                         ]},
+    description='Finding Different Disease Lesions in Plant Leaves',
+    scripts=['scripts/greypatch-batch-process'],
     python_requires='>=3.6',
     install_requires=[
         "ipywidgets == 7.5.1",

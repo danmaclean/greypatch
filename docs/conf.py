@@ -12,12 +12,12 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../redpatch/'))
+sys.path.insert(0, os.path.abspath('../greypatch/'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'redpatch'
+project = 'greypatch'
 copyright = '2020, Dan MacLean and Ciaran Griffin'
 author = 'Dan MacLean and Ciaran Griffin'
 

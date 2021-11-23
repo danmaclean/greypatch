@@ -1,18 +1,18 @@
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3965768.svg
    :target: https://doi.org/10.5281/zenodo.3965768
 
-.. image:: https://travis-ci.org/TeamMacLean/redpatch.svg?branch=master
-    :target: https://travis-ci.org/TeamMacLean/redpatch
+.. image:: https://travis-ci.org/TeamMacLean/greypatch.svg?branch=master
+    :target: https://travis-ci.org/TeamMacLean/greypatch
 
-.. image:: https://readthedocs.org/projects/redpatch/badge/?version=latest
-    :target: https://redpatch.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/greypatch/badge/?version=latest
+    :target: https://greypatch.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-.. image:: https://codecov.io/gh/TeamMacLean/redpatch/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/TeamMacLean/redpatch
+.. image:: https://codecov.io/gh/TeamMacLean/greypatch/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/TeamMacLean/greypatch
 
 ====
-redpatch
+greypatch
 ====
 
 A package to find disease lesions in plant leaf images
@@ -30,14 +30,14 @@ Relies on Shapely.
 Installation
 ============
 
-``pip install redpatch``
+``pip install greypatch``
 
 
 
 Running in Interactive Mode
 ===========================
 
-Examination of single images can be done in interactive mode. Walkthrough examples are provided in Jupyter notebooks. To start these use ``redpatch-start`` on the command line.
+Examination of single images can be done in interactive mode. Walkthrough examples are provided in Jupyter notebooks. To start these use ``greypatch-start`` on the command line.
 
 
 Running in Batch Mode
@@ -54,7 +54,7 @@ Creating the filter settings file
 
 A default filter settings file can be generated as follows:
 
-``redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml``
+``greypatch-batch-process --create_default_filter ~/Desktop/default_filter.yml``
 
 The settings will be written to the specified file.
 
@@ -64,7 +64,7 @@ Analysing a folder with images with no scale card
 
 The basic call for the basic case is:
 
-``redpatch-batch-process ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``greypatch-batch-process ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 The script will run and output will be produced in the destination folder. The same call works whether the folder contains one or many images and if the images contain one or many leaves,
 
@@ -73,19 +73,19 @@ Analysing a folder with images with a scale card
 
 If all the images contain a scale card, and the _same_ scale card, then you can get information about area added to the output. Use the ``--scale_card_side_length`` option to give the size of the scale card in centimetres.
 
-``redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``greypatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 Set the filter values for lesion centre objects
 -----------------------------------------------
 
-``redpatch-batch-process --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml --scale_card_side_length --min_lesion_area 2 --max_lc_ratio 2 --min_lc_size 1 --lc_prop_across_parent 0.1
+``greypatch-batch-process --source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml --scale_card_side_length --min_lesion_area 2 --max_lc_ratio 2 --min_lc_size 1 --lc_prop_across_parent 0.1
 
 Analysing a folder with images with a known scale in pixels per centimetre
 --------------------------------------------------------------------------
 
 If you already know the scale length in pixels per centimetre you can pass that as a value
 
-``redpatch-batch-process --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
+``greypatch-batch-process --pixels_per_cm 472 ---source_folder ~/Desktop/input_images --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml``
 
 
 

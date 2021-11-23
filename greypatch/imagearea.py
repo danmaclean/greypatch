@@ -35,7 +35,7 @@ class ImageArea(object):
             self.long_axis_to_short_axis_ratio = float('inf')
 
         #self.size = "NA"
-        self.passed = "NA"
+        self.passed = None
         self.parent_lesion_region = "NA"
         self.prop_across_parent = "NA"
         self.subimage_centre = self.centroid
@@ -58,9 +58,10 @@ class LesionArea(ImageArea):
         else:
             #self.size = self.area / self.scale
             if self.size < min_lesion_area:
-                self.passed = "FALSE"
+                self.passed = False
             else:
-                self.passed = "TRUE"
+                self.passed = True
+        self.matches_with = None
 
 
 class LeafArea(ImageArea):

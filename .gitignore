@@ -1,6 +1,6 @@
 .idea
 .ipynb_checkpoints
-redpatch_notebooks/.ipynb_checkpoints
+greypatch_notebooks/.ipynb_checkpoints
 *.pyc
 /dist/
 /build/*

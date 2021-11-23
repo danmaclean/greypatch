@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 import math
-import redpatch as rp
+import greypatch as rp
 
 '''mock region properties object'''
 class RP:
@@ -64,7 +64,7 @@ def sample_rgb():
             [[ 255, 255,255], [255,255,255], [255,255,255]],
             [[ 127, 127, 127], [ 255,255,255], [ 127, 127, 127]]
         ],
-        np.int
+        np.int32
     )
 
 @pytest.fixture

@@ -3,43 +3,43 @@
 
 """
 
-redpatch-batch-process
+greypatch-batch-process
 
-A utility for running redpatch pipeline on a folder of images.
+A utility for running greypatch pipeline on a folder of images.
 
 
 See the help:
 
-    redpatch --help
+    greypatch --help
 
 Usage Examples:
 
     Basic use:
-        redpatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a scale card:
-        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a known scale
-        redpatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Create a default filter settings YAML file:
-        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+        greypatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
 
     Set up for webtool use:
 
         when user selects scale card and gives image with card in
 
-            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_image_name /var/www/tmp/scale_img.jpg
+            greypatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_image_name /var/www/tmp/scale_img.jpg
 
         when user doesn't have a scale card image
 
-            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml
+            greypatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml
 
 """
 
 
-import redpatch as rp
+import greypatch as rp
 import os
 import sys
 import pandas as pd
@@ -48,39 +48,30 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser(add_help=True, formatter_class=argparse.RawDescriptionHelpFormatter, description = """
 
-redpatch-batch-process
+greypatch-batch-process
 
-A utility for running redpatch pipeline on a folder of images.
+A utility for running greypatch pipeline on a folder of images.
 
 
 See the help:
 
-    redpatch --help
+    greypatch --help
 
 Usage Examples:
 
     Basic use:
-        redpatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml  --pixels_per_cm 412 --min_lesion_area 0.001
 
     Use a scale card:
-        redpatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --scale_card_side_length 5 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
 
     Use a known scale
-        redpatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml
+        greypatch-batch-process --pixels_per_cm 412 --source_folder ~/Desktop/single_image --destination_folder ~/Desktop/test_out --filter_settings ~/Desktop/default_filter.yml  --pixels_per_cm 412 --min_lesion_area 0.001
 
     Create a default filter settings YAML file:
-        redpatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
+        greypatch-batch-process --create_default_filter ~/Desktop/default_filter.yml
         
-    Set up for webtool use: 
-    
-        when user selects scale card and gives image with card in
-    
-            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml --scale_image_name /var/www/tmp/scale_img.jpg
-            
-        when user doesn't have a scale card image
-        
-            redpatch-batch-process --use_on_server --source_folder  /var/www/tmp_folder_id --destination_folder /var/www/tmp_folder_out --filter_settings /var/www/tmp_folder_id/default_filter.yml
-        
+     
 """)
 
 parser.add_argument("-s","--source_folder", help='folder containing images to analyse', type = str)
@@ -89,12 +80,7 @@ parser.add_argument("-f", "--filter_settings", help="file of filter settings to 
 parser.add_argument("-c", "--create_default_filter", help="creates a default filter file of name provided and exits", default=False, type=str)
 parser.add_argument("-l", "--scale_card_side_length", help="find a scale card in each image and calculate pixels per centimetre", default=False)
 parser.add_argument("-p", "--pixels_per_cm", help="use a previously known value for pixels per centimetre", default=False, type=float)
-parser.add_argument("-w", "--use_on_server", help="use the tool on the redpatch webserver. Overrides some other options", default=False,action='store_true')
-parser.add_argument("-n", "--scale_image_name", help="the name of the image to use as the scale card image. Use on server only.", default=None)
 parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=float)
-parser.add_argument("-j", "--max_lc_ratio", help="maximum length to width ratio a lesion centre can be", default=False, type = float)
-parser.add_argument("-k", "--min_lc_size", help="minimum size a lesion centre can be.", default=False, type=float)
-parser.add_argument("-m", "--lc_prop_across_parent", help="proportion of lesion width the lesion centre position must exceed to be within to be included. counted from either side", default=False, type = float)
 args = parser.parse_args()
 
 
@@ -118,11 +104,6 @@ if not os.path.exists(args.destination_folder):
 if not os.path.exists(args.filter_settings):
     parser.print_help(sys.stderr)
     sys.exit("filter settings file {} does not exist".format(args.filter_settings))
-
-
-if args.scale_image_name and not args.scale_card_side_length:
-    parser.print_help(sys.stderr)
-    sys.exit("scale image provided but scale card side length missing")
 
 if args.scale_card_side_length and args.pixels_per_cm:
     parser.print_help(sys.stderr)
@@ -157,9 +138,9 @@ def _write_summary(dfs, destination_folder, scale = None):
 
     _write_out(os.path.join(destination_folder, "summary_results.csv"), summarised, index=False)
 
-def _write_tidy(dfs, destination_folder):
+def _write_tidy(dfs, destination_folder, name="raw_results.csv"):
     df = pd.concat(dfs, sort = True)
-    _write_out(os.path.join(destination_folder, "results.csv"), df, index=False)
+    _write_out(os.path.join(destination_folder, name), df, index=False)
 
 def _find_scale(imfile, fs, side_length, pixels_per_cm):
         if side_length:
@@ -181,33 +162,28 @@ def batch_process(folder=".", settings="settings.yml"):
     if args.scale_card_side_length and not "scale_card" in fs:
         raise ValueError("scale card side length provided but no scale card image options present in FilterSettings")
 
-    if args.use_on_server and (args.scale_image_name or args.pixels_per_cm):
-        scale_image_name = os.path.join(folder, args.scale_image_name)
-        SCALE = _find_scale(scale_image_name, fs, args.scale_card_side_length, args.pixels_per_cm)
-        PIXEL_LENGTH = 1/SCALE
 
 
     image_files = [str(file.resolve()) for file in Path(folder).iterdir() if
                    file.is_file() and not file.name.startswith(".")]
-    report = rp.RPReport(folder, image_files, fs)
-    all_dfs = []
+    raw_dfs = []
+    match_dfs = []
 
     for imfile in image_files:
-        if not args.use_on_server:
-            print("...doing image {}".format(imfile), file=sys.stderr)
-            SCALE = _find_scale(imfile, fs, args.scale_card_side_length, args.pixels_per_cm)
-            PIXEL_LENGTH = 1/SCALE
-        sub_ims = rp.subimage.get_sub_images(imfile, file_settings = fs, dest_folder = args.destination_folder, min_lesion_area = args.min_lesion_area, scale = SCALE, pixel_length = PIXEL_LENGTH, max_lc_ratio = args.max_lc_ratio, min_lc_size=args.min_lc_size, lc_prop_across_parent=args.lc_prop_across_parent)
+        print("...doing image {}".format(imfile), file=sys.stderr)
+        SCALE = _find_scale(imfile, fs, args.scale_card_side_length, args.pixels_per_cm)
+        PIXEL_LENGTH = 1/SCALE
+        sub_ims = rp.subimage.get_sub_images(imfile, file_settings = fs, dest_folder = args.destination_folder, min_lesion_area = args.min_lesion_area, scale = SCALE, pixel_length = PIXEL_LENGTH)
         for s in sub_ims:
-            report.add_subimages(s)
             s.write_sub_image()
             s.write_annotated_sub_image()
-            report.add_annotated_subimages(s)
-            all_dfs.append( s.create_results_dataframe(on_webserver=args.use_on_server) )
+            rdf = s.create_results_dataframe()
+            raw_dfs.append(rdf)
+            match_dfs.append(rp.subimage._make_match_dataframe(rdf))
     
     #_write_summary(all_dfs, args.destination_folder, scale = SCALE)
-    _write_tidy(all_dfs, args.destination_folder)
-    report.write(os.path.join(args.destination_folder))
+    _write_tidy(raw_dfs, args.destination_folder, name="raw_results.csv")
+    _write_tidy(match_dfs, args.destination_folder, name="matched_results.csv")
 
 if __name__ == '__main__':
     batch_process(folder=args.source_folder, settings=args.filter_settings)

@@ -1,9 +1,9 @@
-.. redpatch documentation master file, created by
+.. greypatch documentation master file, created by
    sphinx-quickstart on Mon May  4 10:43:03 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to redpatch's documentation!
+Welcome to greypatch's documentation!
 ====================================
 
 .. toctree::
@@ -19,7 +19,7 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. automodule:: redpatch
+.. automodule:: greypatch
    :members:
 
 .. automodule:: filtersettings
