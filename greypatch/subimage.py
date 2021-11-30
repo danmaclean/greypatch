@@ -321,23 +321,23 @@ class SubImage(object):
         return pd.DataFrame(d)
 
 
-    def create_results_dataframe(self, passed_only=True):
+    def get_results_dataframes(self, passed_only=False):
         """
         generates a pandas dataframe of results from the SubImage object
         :return: pandas.dataframe
         """
-        #hdf = self._make_pandas(self.healthy_obj_props, area_type="healthy_region", image_file=self.parent_image_file, sub_image_index=self.index)
-        outer_df = self._make_pandas(self.outer_lesion_area_props, area_type = "outer_lesion_area", image_file=self.parent_image_file, sub_image_index=self.index)
-        inner_df = self._make_pandas(self.inner_lesion_area_props, area_type = "inner_lesion_area", image_file=self.parent_image_file, sub_image_index=self.index)
-        #ldf = self._make_pandas(self.lesion_area_props, area_type="lesion_region", image_file=self.parent_image_file, sub_image_index=self.index)
-#        ladf = self._make_pandas(self.leaf_area_props, area_type="leaf_area", image_file=self.parent_image_file, sub_image_index=self.index)
-#        if not on_webserver:
-#            lcdf = self._make_pandas(self.lesion_centre_props, area_type="lesion_centre",image_file=self.parent_image_file, sub_image_index=self.index)
-#            return hdf.append([ladf, ldf, lcdf], ignore_index=True)
-        all = outer_df.append([inner_df]) #.append([ladf, ldf]).drop('parent_lesion_region', axis=1)
+
+
+        outer_df = self._make_pandas(self.outer_lesion_area_props, area_type = "outer_lesion_area",
+                                     image_file=self.parent_image_file, sub_image_index=self.index)
+        inner_df = self._make_pandas(self.inner_lesion_area_props, area_type = "inner_lesion_area",
+                                     image_file=self.parent_image_file, sub_image_index=self.index)
+
         if passed_only:
-            return all[all['passed']]
-        return all
+            inner_df = inner_df[inner_df["passed"]]
+            outer_df = outer_df[outer_df["passed"]]
+
+        return inner_df, outer_df
 
 
 

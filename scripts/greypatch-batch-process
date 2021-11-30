@@ -81,6 +81,7 @@ parser.add_argument("-c", "--create_default_filter", help="creates a default fil
 parser.add_argument("-l", "--scale_card_side_length", help="find a scale card in each image and calculate pixels per centimetre", default=False)
 parser.add_argument("-p", "--pixels_per_cm", help="use a previously known value for pixels per centimetre", default=False, type=float)
 parser.add_argument("-a", "--min_lesion_area", help="the minimum area a lesion can be to be retained", default=False, type=float)
+parser.add_argument("-o", "--passed_only", help="only output objects that pass the filter", default=True, action="store_true")
 args = parser.parse_args()
 
 
@@ -173,17 +174,29 @@ def batch_process(folder=".", settings="settings.yml"):
         print("...doing image {}".format(imfile), file=sys.stderr)
         SCALE = _find_scale(imfile, fs, args.scale_card_side_length, args.pixels_per_cm)
         PIXEL_LENGTH = 1/SCALE
-        sub_ims = rp.subimage.get_sub_images(imfile, file_settings = fs, dest_folder = args.destination_folder, min_lesion_area = args.min_lesion_area, scale = SCALE, pixel_length = PIXEL_LENGTH)
+        sub_ims = rp.subimage.get_sub_images(imfile, file_settings = fs, dest_folder = args.destination_folder,
+                                             min_lesion_area = args.min_lesion_area, scale = SCALE,
+                                             pixel_length = PIXEL_LENGTH)
         for s in sub_ims:
             s.write_sub_image()
             s.write_annotated_sub_image()
-            rdf = s.create_results_dataframe()
-            raw_dfs.append(rdf)
-            match_dfs.append(rp.subimage._make_match_dataframe(rdf))
+            inner_df, outer_df = s.get_results_dataframes(passed_only = args.passed_only)
+
+            if len(inner_df) > 0 and len(outer_df) > 0:
+                rdf = outer_df.append(inner_df)
+                raw_dfs.append(rdf)
+                match_dfs.append(rp.subimage._make_match_dataframe(rdf))
+            else:
+                raw_dfs.append(inner_df)
+                raw_dfs.append(outer_df)
     
-    #_write_summary(all_dfs, args.destination_folder, scale = SCALE)
-    _write_tidy(raw_dfs, args.destination_folder, name="raw_results.csv")
-    _write_tidy(match_dfs, args.destination_folder, name="matched_results.csv")
+
+    if len(raw_dfs) > 0:
+        _write_tidy(raw_dfs, args.destination_folder, name="raw_results.csv")
+    if len(match_dfs) > 0:
+        _write_tidy(match_dfs, args.destination_folder, name="matched_results.csv")
+    else:
+        sys.stderr.write("...no matches found. skipping matched_results.csv\n")
 
 if __name__ == '__main__':
     batch_process(folder=args.source_folder, settings=args.filter_settings)
